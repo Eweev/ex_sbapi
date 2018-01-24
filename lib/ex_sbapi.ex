@@ -2,6 +2,9 @@ defmodule ExSbapi do
   @moduledoc """
   Documentation for ExSbapi.
   """
+
+  @subsribe_events %{product_edit: "product_edit",product_add: "product_add"}
+
   def authorize_url!(provider,scope,client = %{}) do
     case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
@@ -163,6 +166,53 @@ defmodule ExSbapi do
     %{ filter: %{},
        uri_token: [order_id]
      }
+  end
+
+  def list_of_events do
+    @subsribe_events
+    |> Enum.map( fn {k, v} -> 
+      v 
+
+    end)
+  end
+
+
+  def subscribe_to_event(event,endpoint,access_token,client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: []
+    }
+     case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+        if(Map.has_key?(@subsribe_events,event |> String.to_atom())) do
+          object_params = %{object: "webhook", body: %{"#{event}" => "#{endpoint}"}, params: params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          put_request(client_params,object_params)
+        else
+          raise "event is not found"
+        end
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
+  def subscribe_from_event(event,endpoint,access_token, client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: []
+    }
+     case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+        if(Map.has_key?(@subsribe_events,event |> String.to_atom())) do
+          object_params = %{object: "webhook", body: %{"#{event}" => "#{endpoint}"}, params: params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          put_request(client_params,object_params)
+        else
+          raise "event is not found"
+        end
+      {:error, reason} ->
+        raise reason 
+    end
   end
 
 

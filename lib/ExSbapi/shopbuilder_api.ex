@@ -6,7 +6,8 @@ defmodule ShopbuilderApi do
 	    %{"order" =>  api_root <> "order/id/!0",
 	      "customer_profile" => api_root <> "customer-profile",
 	      "payment_options" => api_root <> "order-payment-methods/id/!0",
-	      "shipping_options" => api_root <> "order-shipping-methods/id/!0"
+	      "shipping_options" => api_root <> "order-shipping-methods/id/!0",
+        "webhook" => api_root <> "sb_webhooks/subscribe_webhook"
 	    }
   	end
 

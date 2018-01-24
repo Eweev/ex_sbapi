@@ -65,5 +65,5 @@ defmodule ShopbuilderOauth do
     |> put_header("accept", "application/json")
     |> OAuth2.Strategy.AuthCode.get_token(params, headers)
   end
-
+  
 end

@@ -1,6 +1,21 @@
 defmodule ExSbapi do
   @moduledoc """
-  Documentation for ExSbapi.
+  Elixir Wrapper Around Shopbuilder API
+  """
+
+  @doc """
+  Returns `{:ok,_ }` or `{:error, %{reason: "unauthorized"}}` 
+
+  ## Endpoint: 
+  This function is being called from `/lib/RtCheckoutWeb/templates/install/channel.js.eex` by 
+  `this.channel.join()`
+
+  ## Params: 
+  `checkout:checkout_id` , `message`, `socket`
+
+  ## Functionality: 
+  It checks `website_id` and `order_od` that has been sent from `client side` with `website_id` and 
+  `order_id` that has been verified in `user_socket`.
   """
 
   @subsribe_events %{product_edit: "product_edit",product_add: "product_add"}
@@ -168,12 +183,19 @@ defmodule ExSbapi do
      }
   end
 
-  def list_of_events do
-    @subsribe_events
-    |> Enum.map( fn {k, v} -> 
-      v 
-
-    end)
+  def list_of_events(access_token, client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: []
+    }
+    case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "get_events", body: "", params: params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          get_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
   end
 
 
@@ -184,35 +206,58 @@ defmodule ExSbapi do
     }
      case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
-        if(Map.has_key?(@subsribe_events,event |> String.to_atom())) do
-          object_params = %{object: "webhook", body: %{"#{event}" => "#{endpoint}"}, params: params, format: "json"}
+          object_params = %{object: "subscribe", body: %{"#{event}" => "#{endpoint}"}, params: params, format: "json"}
           client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
-          put_request(client_params,object_params)
-        else
-          raise "event is not found"
-        end
+          post_request(client_params,object_params)
       {:error, reason} ->
         raise reason 
     end
   end
 
-  def subscribe_from_event(event,endpoint,access_token, client \\ %{}) do
+  def unsubscribe_from_event(endpoint,access_token, client \\ %{}) do
     params =  %{
       filter: %{},
       uri_token: []
     }
      case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
-        if(Map.has_key?(@subsribe_events,event |> String.to_atom())) do
-          object_params = %{object: "webhook", body: %{"#{event}" => "#{endpoint}"}, params: params, format: "json"}
+          object_params = %{object: "unsubscribe", body: %{"eventIds" => endpoint}, params: params, format: "json"}
           client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
-          put_request(client_params,object_params)
-        else
-          raise "event is not found"
-        end
+          post_request(client_params,object_params)
       {:error, reason} ->
         raise reason 
     end
+  end
+
+  def unsubscribe_from_all_events(access_token, client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: []
+    }
+     case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "unsubscribe", body: %{"eventIds" => ["all"]}, params: params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          post_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
+  def get_roles(access_token, client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: []
+    }
+     case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "roles", body: "", params: params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          get_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+
   end
 
 

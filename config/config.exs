@@ -27,3 +27,10 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+
+  config :ex_sbapi, ExSbapi,
+    client_id: "4939277613",
+    client_secret: "mMdMigzVnZ4BidegNLAB",
+    website_url: "http://zaq.test.sbap.io",
+    redirect_uri: "http://ltspeb678c.office.eweev.com:4002/auth/shopbuilder/callback"

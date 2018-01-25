@@ -18,8 +18,6 @@ defmodule ExSbapi do
   `order_id` that has been verified in `user_socket`.
   """
 
-  @subsribe_events %{product_edit: "product_edit",product_add: "product_add"}
-
   def authorize_url!(provider,scope,client = %{}) do
     case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->

@@ -39,7 +39,8 @@ defmodule ShopbuilderApi do
       {:error, %OAuth2.Response{status_code: 401, body: body}} ->
         Logger.error("Unauthorized token")
       {:error, %OAuth2.Error{reason: reason}} ->
-        IO.inspect(reason)
+        Logger.error(reason)
+
     end
   end
 

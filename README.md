@@ -10,7 +10,7 @@ by adding `ex_sbapi` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:ex_sbapi, "~> 0.1.0"}
+    {:ex_sbapi, "~> 0.1.2"}
   ]
 end
 ```

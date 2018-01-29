@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.0.3] - 2018-01-29
+## [0.1.2] - 2018-01-29
 ### Added
 - Get hashed payload
 
@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 - Unsubscribe from a specific event
 - Get user roles that are available on Shopbuilder
 
-## 0.1.0 - 2018-01-16
+## [0.1.0] - 2018-01-16
 ### Added
 - Get access token from Shopbuilder
 - Authorization of access token

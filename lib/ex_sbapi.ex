@@ -258,6 +258,30 @@ defmodule ExSbapi do
 
   end
 
+  def get_payload(your_hash_key,payload,sb_hash,format \\ "") do
+
+    if(check_hash(your_hash_key,payload,sb_hash))do
+      decoded_data = Base.decode64!(payload,padding: false)
+      if(format == "")do
+        {:ok, data} = Poison.decode(decoded_data)
+        data
+      else
+        decoded_data
+      end
+    else
+      {:error, "Not valid hash key"}
+    end
+  end
+
+  defp check_hash(your_hash_key,payload,sb_hash)do
+    hashed_string = :crypto.hmac(:sha256, your_hash_key ,payload) |> Base.encode16(case: :lower)
+    if(hashed_string == sb_hash) do
+      true
+    else
+      false
+    end
+  end
+
 
 
 end

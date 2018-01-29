@@ -1,7 +1,23 @@
 defmodule ExSbapi do
   @moduledoc """
-  Documentation for ExSbapi.
+  Elixir Wrapper Around Shopbuilder API
   """
+
+  @doc """
+  Returns `{:ok,_ }` or `{:error, %{reason: "unauthorized"}}` 
+
+  ## Endpoint: 
+  This function is being called from `/lib/RtCheckoutWeb/templates/install/channel.js.eex` by 
+  `this.channel.join()`
+
+  ## Params: 
+  `checkout:checkout_id` , `message`, `socket`
+
+  ## Functionality: 
+  It checks `website_id` and `order_od` that has been sent from `client side` with `website_id` and 
+  `order_id` that has been verified in `user_socket`.
+  """
+
   def authorize_url!(provider,scope,client = %{}) do
     case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
@@ -163,6 +179,107 @@ defmodule ExSbapi do
     %{ filter: %{},
        uri_token: [order_id]
      }
+  end
+
+  def list_of_events(access_token, client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: []
+    }
+    case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "get_events", body: "", params: params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          get_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
+
+  def subscribe_to_event(event,endpoint,access_token,client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: []
+    }
+     case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "subscribe", body: %{"#{event}" => "#{endpoint}"}, params: params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          post_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
+  def unsubscribe_from_event(endpoint,access_token, client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: []
+    }
+     case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "unsubscribe", body: %{"eventIds" => endpoint}, params: params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          post_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
+  def unsubscribe_from_all_events(access_token, client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: []
+    }
+     case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "unsubscribe", body: %{"eventIds" => ["all"]}, params: params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          post_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
+  def get_roles(access_token, client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: []
+    }
+     case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "roles", body: "", params: params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          get_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+
+  end
+
+  def get_payload(your_hash_key,payload,sb_hash,format \\ "") do
+
+    if(check_hash(your_hash_key,payload,sb_hash))do
+      decoded_data = Base.decode64!(payload,padding: false)
+      if(format == "")do
+        {:ok, data} = Poison.decode(decoded_data)
+        data
+      else
+        decoded_data
+      end
+    else
+      {:error, "Not valid hash key"}
+    end
+  end
+
+  defp check_hash(your_hash_key,payload,sb_hash)do
+    hashed_string = :crypto.hmac(:sha256, your_hash_key ,payload) |> Base.encode16(case: :lower)
+    if(hashed_string == sb_hash) do
+      true
+    else
+      false
+    end
   end
 
 

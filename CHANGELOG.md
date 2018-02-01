@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - 2018-02-01
+### Added
+- Check if there is any restrection mode set on your Shopbuilder Website
+- Set your own restriction mode
+
 ## [0.1.2] - 2018-01-29
 ### Added
 - Get hashed payload

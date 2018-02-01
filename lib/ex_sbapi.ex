@@ -1,4 +1,5 @@
 defmodule ExSbapi do
+  alias ExSbapi.Helper
   @moduledoc """
   Elixir Wrapper Around Shopbuilder API
   """
@@ -106,20 +107,20 @@ defmodule ExSbapi do
   end
 
   def get_order(order_id,website_url,access_token, format \\ "json") do
-    object_params = %{object: "order", body: "", params: fill_order_id(order_id), format: format}
+    object_params = %{object: "order", body: "", params: Helper.params_with_order_id(order_id), format: format}
     client_params = %{website_url: website_url,access_token: access_token}
     get_request(client_params,object_params)
   end
 
   def get_payment_options(order_id,website_url,access_token) do
-    object_params = %{object: "payment_options", body: "", params: fill_order_id(order_id), format: ""}
+    object_params = %{object: "payment_options", body: "", params: Helper.params_with_order_id(order_id), format: ""}
     client_params = %{website_url: website_url,access_token: access_token}
     get_request(client_params,object_params)
   
   end
 
   def get_shipping_options(order_id,website_url,access_token) do
-    object_params = %{object: "shipping_options", body: "", params: fill_order_id(order_id), format: ""}
+    object_params = %{object: "shipping_options", body: "", params: Helper.params_with_order_id(order_id), format: ""}
     client_params = %{website_url: website_url,access_token: access_token}
     get_request(client_params,object_params)
 
@@ -131,7 +132,7 @@ defmodule ExSbapi do
       mail: value
     }
 
-    object_params = %{object: "order", body: order_object, params: fill_order_id(order_id), format: format}
+    object_params = %{object: "order", body: order_object, params: Helper.params_with_order_id(order_id), format: format}
     client_params = %{website_url: website_url,access_token: access_token}
     put_request(client_params,object_params)
     
@@ -144,7 +145,7 @@ defmodule ExSbapi do
       }
     }
 
-    object_params = %{object: "order", body: order_object, params: fill_order_id(order_id), format: format}
+    object_params = %{object: "order", body: order_object, params: Helper.params_with_order_id(order_id), format: format}
     client_params = %{website_url: website_url,access_token: access_token}
     put_request(client_params,object_params)  
     
@@ -157,7 +158,7 @@ defmodule ExSbapi do
       }
     }
 
-    object_params = %{object: "order", body: order_object, params: fill_order_id(order_id), format: format}
+    object_params = %{object: "order", body: order_object, params: Helper.params_with_order_id(order_id), format: format}
     client_params = %{website_url: website_url,access_token: access_token}
     put_request(client_params,object_params)    
   end
@@ -169,26 +170,17 @@ defmodule ExSbapi do
       ]
     }
 
-    object_params = %{object: "order", body: order_object, params: fill_order_id(order_id), format: format}
+    object_params = %{object: "order", body: order_object, params: Helper.params_with_order_id(order_id), format: format}
     client_params = %{website_url: website_url,access_token: access_token}
 
     put_request(client_params,object_params)
   end
 
-  defp fill_order_id(order_id) do
-    %{ filter: %{},
-       uri_token: [order_id]
-     }
-  end
-
   def list_of_events(access_token, client \\ %{}) do
-    params =  %{
-      filter: %{},
-      uri_token: []
-    }
+
     case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
-          object_params = %{object: "get_events", body: "", params: params, format: "json"}
+          object_params = %{object: "get_events", body: "", params: Helper.default_empty_params, format: "json"}
           client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
           get_request(client_params,object_params)
       {:error, reason} ->
@@ -198,13 +190,10 @@ defmodule ExSbapi do
 
 
   def subscribe_to_event(event,endpoint,access_token,client \\ %{}) do
-    params =  %{
-      filter: %{},
-      uri_token: []
-    }
+
      case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
-          object_params = %{object: "subscribe", body: %{"#{event}" => "#{endpoint}"}, params: params, format: "json"}
+          object_params = %{object: "subscribe", body: %{"#{event}" => "#{endpoint}"}, params: Helper.default_empty_params, format: "json"}
           client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
           post_request(client_params,object_params)
       {:error, reason} ->
@@ -213,13 +202,10 @@ defmodule ExSbapi do
   end
 
   def unsubscribe_from_event(endpoint,access_token, client \\ %{}) do
-    params =  %{
-      filter: %{},
-      uri_token: []
-    }
+
      case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
-          object_params = %{object: "unsubscribe", body: %{"eventIds" => endpoint}, params: params, format: "json"}
+          object_params = %{object: "unsubscribe", body: %{"eventIds" => endpoint}, params: Helper.default_empty_params, format: "json"}
           client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
           post_request(client_params,object_params)
       {:error, reason} ->
@@ -228,13 +214,10 @@ defmodule ExSbapi do
   end
 
   def unsubscribe_from_all_events(access_token, client \\ %{}) do
-    params =  %{
-      filter: %{},
-      uri_token: []
-    }
+
      case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
-          object_params = %{object: "unsubscribe", body: %{"eventIds" => ["all"]}, params: params, format: "json"}
+          object_params = %{object: "unsubscribe", body: %{"eventIds" => ["all"]}, params: Helper.default_empty_params, format: "json"}
           client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
           post_request(client_params,object_params)
       {:error, reason} ->
@@ -243,13 +226,9 @@ defmodule ExSbapi do
   end
 
   def get_roles(access_token, client \\ %{}) do
-    params =  %{
-      filter: %{},
-      uri_token: []
-    }
      case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
-          object_params = %{object: "roles", body: "", params: params, format: "json"}
+          object_params = %{object: "roles", body: "", params: Helper.default_empty_params, format: "json"}
           client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
           get_request(client_params,object_params)
       {:error, reason} ->
@@ -260,7 +239,7 @@ defmodule ExSbapi do
 
   def get_payload(your_hash_key,payload,sb_hash,format \\ "") do
 
-    if(check_hash(your_hash_key,payload,sb_hash))do
+    if(Helper.check_hash(your_hash_key,payload,sb_hash))do
       decoded_data = Base.decode64!(payload,padding: false)
       if(format == "")do
         {:ok, data} = Poison.decode(decoded_data)
@@ -271,17 +250,31 @@ defmodule ExSbapi do
     else
       {:error, "Not valid hash key"}
     end
+
   end
 
-  defp check_hash(your_hash_key,payload,sb_hash)do
-    hashed_string = :crypto.hmac(:sha256, your_hash_key ,payload) |> Base.encode16(case: :lower)
-    if(hashed_string == sb_hash) do
-      true
-    else
-      false
+ 
+
+  def get_restricted_mode(access_token,client \\ %{}) do
+     case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "restricted", body: "", params: Helper.default_empty_params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          get_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
     end
   end
 
-
+  def set_restricted_mode(restricted,mode,authorized_roles,access_token,client \\ %{}) do
+     case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "restricted", body: Helper.body_for_mode(restricted,mode,authorized_roles), params: Helper.default_empty_params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          post_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
 
 end

@@ -10,7 +10,8 @@ defmodule ShopbuilderApi do
         "subscribe" => api_root <> "sb_webhooks/subscribe_webhook",
         "get_events" => api_root <> "sb_webhooks",
         "unsubscribe" => api_root <> "sb_webhooks/unsubscribe_webhook",
-        "roles" => api_root <> "sb_roles"
+        "roles" => api_root <> "sb_roles",
+        "restricted" => api_root <> "sb_api_config"
 	    }
   	end
 
@@ -109,13 +110,13 @@ defmodule ShopbuilderApi do
     end
   end
 
-  	defp format_output(format,response) do
-	    case format do
-	      "json" -> 
-	        response
-	       _ ->
-	        to_object(response)
-	    end
-  	end
+	defp format_output(format,response) do
+    case format do
+      "json" -> 
+        response
+       _ ->
+        to_object(response)
+    end
+	end
 
 end

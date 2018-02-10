@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] - 2018-02-10
+### Fix Bugs
+- Update Elixir to 1.6
+
 ## [0.1.3] - 2018-02-01
 ### Added
 - Check if there is any restrection mode set on your Shopbuilder Website

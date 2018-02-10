@@ -1,7 +1,7 @@
 defmodule ExSbapi.Mixfile do
   use Mix.Project
 
-  @version "0.1.3"
+  @version "0.1.4"
   @name "shopbuilder_api"
   @maintainers ["Jad Tarabay", "Julien Fayad"]
   @url "https://github.com/Eweev/ex_sbapi"
@@ -10,7 +10,7 @@ defmodule ExSbapi.Mixfile do
     [
       app: :ex_sbapi,
       version: @version,
-      elixir: "~> 1.5",
+      elixir: "~> 1.6",
       start_permanent: Mix.env == :prod,
       description: description(),
       package: package(),

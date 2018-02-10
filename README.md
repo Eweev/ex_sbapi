@@ -15,6 +15,15 @@ def deps do
 end
 ```
 
+If you want to validate user sessions for apps using the ShopBuilder JS SDK, you have to 
+initialize the process that handles this verification by adding the following line in your `application.ex` children array:
+
+```elixir
+supervisor(ExSbapi.Process.SessionSupervisor, [])
+```
+
+And protect the routes to secure with the `ExSbapi.Session` Plug.
+
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/ex_sbapi](https://hexdocs.pm/ex_sbapi).

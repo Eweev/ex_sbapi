@@ -13,18 +13,21 @@ defmodule ExSbapi.Process.SessionSupervisor do
 		)
 	end
 
-	def new_process(topic) do
+	def new_process(token) do
+		hash_key = "TQ67BG4xQ3UdcjlSke3QJO7+ZhAwFqPYGnQcDIRSI8eOW1Xg5vC7G+7tW0XRsGIBV7KDTnL5XIg8iMIbr6p+Nw=="
+      	hashed = :crypto.hmac(:sha256, hash_key, token) |> Base.encode16(case: :lower)
+      	 
 		child = 
 			%{
 				id: ExSbapi.Process.Session,
-				start:  {ExSbapi.Process.Session,:start_link, [topic]},
+				start:  {ExSbapi.Process.Session,:start_link, [hashed]},
 				restart: :transient
 			}
 		supervisor = DynamicSupervisor.start_child(__MODULE__, child)
 
 		case supervisor do
 			{:error, :already_present} ->
-				Supervisor.restart_child(__MODULE__, topic)
+				Supervisor.restart_child(__MODULE__, hashed)
 			_ ->
 				supervisor
 		end

@@ -1,8 +1,8 @@
 defmodule ExSbapi.Mixfile do
   use Mix.Project
 
-  @version "0.1.0"
-  @name "ShopBuilder API"
+  @version "0.1.4"
+  @name "shopbuilder_api"
   @maintainers ["Jad Tarabay", "Julien Fayad"]
   @url "https://github.com/Eweev/ex_sbapi"
 
@@ -10,7 +10,7 @@ defmodule ExSbapi.Mixfile do
     [
       app: :ex_sbapi,
       version: @version,
-      elixir: "~> 1.5",
+      elixir: "~> 1.6",
       start_permanent: Mix.env == :prod,
       description: description(),
       package: package(),
@@ -43,13 +43,12 @@ defmodule ExSbapi.Mixfile do
 
   defp package() do 
     [ 
-      organization: "Eweev", 
       # This option is only needed when you don't want to use the OTP application name 
       name: @name,
       # These are the default files included in the package 
-      files: ["lib", "priv", "mix.exs", "README*", "readme*", "LICENSE*", "license*"], 
+      files: ["lib", "mix.exs", "README*", "LICENSE*"], 
       maintainers: @maintainers, 
-      licenses: ["Shopbuilder"],
+      licenses: ["MIT"],
       links: %{"GitHub" => @url}
     ] 
   end 

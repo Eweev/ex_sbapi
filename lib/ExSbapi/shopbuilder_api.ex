@@ -6,7 +6,12 @@ defmodule ShopbuilderApi do
 	    %{"order" =>  api_root <> "order/id/!0",
 	      "customer_profile" => api_root <> "customer-profile",
 	      "payment_options" => api_root <> "order-payment-methods/id/!0",
-	      "shipping_options" => api_root <> "order-shipping-methods/id/!0"
+	      "shipping_options" => api_root <> "order-shipping-methods/id/!0",
+        "subscribe" => api_root <> "sb_webhooks/subscribe_webhook",
+        "get_events" => api_root <> "sb_webhooks",
+        "unsubscribe" => api_root <> "sb_webhooks/unsubscribe_webhook",
+        "roles" => api_root <> "sb_roles",
+        "restricted" => api_root <> "sb_api_config"
 	    }
   	end
 
@@ -17,7 +22,6 @@ defmodule ShopbuilderApi do
   def get(website_url,access_token,object, params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
     client = client(website_url,access_token)
-
     case OAuth2.Client.get(client,url) do
       {:ok, %OAuth2.Response{body: response}} ->
         format_output(format,response)
@@ -36,13 +40,14 @@ defmodule ShopbuilderApi do
       {:error, %OAuth2.Response{status_code: 401, body: body}} ->
         Logger.error("Unauthorized token")
       {:error, %OAuth2.Error{reason: reason}} ->
-        Logger.error("Error: #{inspect reason}")
+        Logger.error(reason)
+
     end
   end
 
   def post(website_url,access_token, object,body \\ "", params \\ %{}, format \\ "") do
      url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
-    case OAuth2.Client.post(client(website_url,access_token),url, to_json(body),["Content-Type": "application/json"]) do
+    case OAuth2.Client.post(client(website_url,access_token),url, body,["Content-Type": "application/json"]) do
       {:ok, %OAuth2.Response{body: response}} ->
         format_output(format,response)
       {:error, %OAuth2.Response{status_code: 401, body: body}} ->
@@ -105,13 +110,13 @@ defmodule ShopbuilderApi do
     end
   end
 
-  	defp format_output(format,response) do
-	    case format do
-	      "json" -> 
-	        response
-	       _ ->
-	        to_object(response)
-	    end
-  	end
+	defp format_output(format,response) do
+    case format do
+      "json" -> 
+        response
+       _ ->
+        to_object(response)
+    end
+	end
 
 end

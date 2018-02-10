@@ -35,7 +35,7 @@ defmodule ShopbuilderOauth do
       strategy: __MODULE__,
       client_id: client_params.client_id,
       client_secret: client_params.client_secret,
-      redirect_uri: client_params.redirect_uri,
+      redirect_uri: client_params.redirect_uri <> "/auth/shopbuilder/callback",
       site: client_params.website_url,
       authorize_url: client_params.website_url <> "/oauth2/authorize",
       token_url: client_params.website_url <> "/oauth2/token"
@@ -65,5 +65,5 @@ defmodule ShopbuilderOauth do
     |> put_header("accept", "application/json")
     |> OAuth2.Strategy.AuthCode.get_token(params, headers)
   end
-
+  
 end

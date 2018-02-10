@@ -1,6 +1,6 @@
 defmodule Config do
 
-   @config_req [:client_id,:client_secret,:website_url,:redirect_uri]
+   @config_req [:client_id,:client_secret,:website_url,:redirect_uri, :token_duration]
 
    def config do
     :ex_sbapi

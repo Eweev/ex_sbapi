@@ -22,7 +22,17 @@ initialize the process that handles this verification by adding the following li
 supervisor(ExSbapi.Process.SessionSupervisor, [])
 ```
 
-And protect the routes to secure with the `ExSbapi.Session` Plug.
+And protect the routes to secure with the following pipeline:
+
+```elixir
+  pipeline :secure_request do
+    plug :verify_token
+    plug ExSbapi.Session
+  end
+```
+
+the `:verify_token` plug should take care of verifying the token using your application logic and put the data it contains
+in the `conn.assigns[:exsbapi_session_data]` it should also place the token in `conn.assigns[:token]`
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can

@@ -11,7 +11,8 @@ defmodule ShopbuilderApi do
         "get_events" => api_root <> "sb_webhooks",
         "unsubscribe" => api_root <> "sb_webhooks/unsubscribe_webhook",
         "roles" => api_root <> "sb_roles",
-        "restricted" => api_root <> "sb_api_config"
+        "restricted" => api_root <> "sb_api_config",
+        "countries" => api_root <> "fetch-countries"
 	    }
   	end
 

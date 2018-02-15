@@ -112,6 +112,12 @@ defmodule ExSbapi do
     get_request(client_params,object_params)
   end
 
+  def get_sb_countries(website_url,access_token, format \\ "json") do
+    object_params = %{object: "countries", body: "", params: %{}, format: format}
+    client_params = %{website_url: website_url,access_token: access_token}
+    get_request(client_params,object_params)
+  end
+
   def get_payment_options(order_id,website_url,access_token) do
     object_params = %{object: "payment_options", body: "", params: Helper.params_with_order_id(order_id), format: ""}
     client_params = %{website_url: website_url,access_token: access_token}

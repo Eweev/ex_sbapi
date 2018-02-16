@@ -57,7 +57,13 @@ defmodule ExSbapi do
 
 
   def get_request(%{website_url: website_url,access_token: access_token},%{object: object, params: params, format: format,body: body})do
-    ShopbuilderApi.get(website_url,access_token,object,params,format);
+    case ShopbuilderApi.get(website_url,access_token,object,params,format) do
+      {:ok, response} ->
+        {:ok, response}
+      {:error, reason} ->
+        {:error, reason}
+
+    end
   end
 
   def get_request(_,_)do
@@ -65,7 +71,7 @@ defmodule ExSbapi do
   end
 
   def post_request(%{website_url: website_url,access_token: access_token},%{object: object, body: body, params: params, format: format})do
-    ShopbuilderApi.post(website_url,access_token,object,body,params,format);
+    ShopbuilderApi.post(website_url,access_token,object,body,params,format)
   end
 
   def post_request(_,_)do
@@ -73,7 +79,7 @@ defmodule ExSbapi do
   end
 
   def put_request(%{website_url: website_url,access_token: access_token},%{object: object, body: body, params: params, format: format})do
-    ShopbuilderApi.put(website_url,access_token,object,body,params,format);
+    ShopbuilderApi.put(website_url,access_token,object,body,params,format)
   end
 
   def put_request(_,_)do
@@ -81,7 +87,7 @@ defmodule ExSbapi do
   end
 
   def delete_request(%{website_url: website_url,access_token: access_token},%{object: object, params: params, format: format,body: body})do
-    ShopbuilderApi.delete(website_url,access_token,object,params,format);
+    ShopbuilderApi.delete(website_url,access_token,object,params,format)
   end
 
   def delete_request(_,_)do
@@ -89,21 +95,26 @@ defmodule ExSbapi do
   end
 
 
-  def get_address(user_id,order_id,website_url,access_token) do
-
+  def get_address(user_id,website_url,access_token,format \\ "", option \\ "") do
     params =  %{
-      filter: %{
-        uid: user_id,
-        type: "shipping"
-        },
-      uri_token: [
-        order_id
-      ]
+      filter: %{},
+      uri_token: []
     }
 
-    object_params = %{object: "customer_profile", body: "", params: params, format: ""}
+    params = case option do
+      "" ->
+        new_filter = Map.put_new(params.filter, :uid, user_id)
+                     |> Map.put_new(:type, "shipping")
+
+        Map.put(params, :filter, new_filter)
+      "uuid" ->
+        new_filter = Map.put_new(params.filter, :user_uuid, user_id)
+        Map.put(params, :filter, new_filter)
+    end
+
+    object_params = %{object: "customer_profile", body: "", params: params, format: format}
     client_params = %{website_url: website_url,access_token: access_token}
-    get_request(client_params,object_params)
+    get_request(client_params,object_params) 
   end
 
   def get_order(order_id,website_url,access_token, format \\ "json") do

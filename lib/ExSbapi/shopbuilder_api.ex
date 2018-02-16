@@ -24,28 +24,24 @@ defmodule ShopbuilderApi do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
     client = client(website_url,access_token)
     case OAuth2.Client.get(client,url) do
-      {:ok, %OAuth2.Response{body: response}} ->
-        format_output(format,response)
-      {:error, %OAuth2.Response{status_code: 401, body: body}} ->
-        Logger.error("Unauthorized token")
-      {:error, %OAuth2.Response{status_code: 404, body: body}} ->
-        Logger.error("No entities found")
-      {:error, %OAuth2.Response{status_code: status, body: body}} ->
-        Logger.error("Unknown error: #{inspect body}")
+      {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
+        {:ok, format_output(format,response)}
+      {:error, %OAuth2.Response{status_code: code, body: body}} ->
+        error_handler(code,body)
       {:error, %OAuth2.Error{reason: reason}} ->
-        Logger.error("Error: #{inspect reason}")
+        error_handler(500,reason)
     end
   end
 
   def put(website_url,access_token ,object, body \\ "", params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
     case OAuth2.Client.put(client(website_url,access_token),url, to_json(body),["Content-Type": "application/json"]) do
-      {:ok, %OAuth2.Response{body: response}} ->
-        format_output(format,response)
-      {:error, %OAuth2.Response{status_code: 401, body: body}} ->
-        Logger.error("Unauthorized token")
+      {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
+        {:ok, format_output(format,response)}
+      {:error, %OAuth2.Response{status_code: code, body: body}} ->
+        error_handler(code,body)
       {:error, %OAuth2.Error{reason: reason}} ->
-        Logger.error(reason)
+        error_handler(500,reason)
 
     end
   end
@@ -53,12 +49,12 @@ defmodule ShopbuilderApi do
   def post(website_url,access_token, object,body \\ "", params \\ %{}, format \\ "") do
      url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
     case OAuth2.Client.post(client(website_url,access_token),url, body,["Content-Type": "application/json"]) do
-      {:ok, %OAuth2.Response{body: response}} ->
-        format_output(format,response)
-      {:error, %OAuth2.Response{status_code: 401, body: body}} ->
-        Logger.error("Unauthorized token")
+      {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
+        {:ok, format_output(format,response)}
+      {:error, %OAuth2.Response{status_code: code, body: body}} ->
+        error_handler(code,body)
       {:error, %OAuth2.Error{reason: reason}} ->
-        Logger.error("Error: #{inspect reason}")
+        error_handler(500,reason)
     end
     
   end
@@ -66,14 +62,33 @@ defmodule ShopbuilderApi do
   def delete(website_url,access_token, object, params \\ %{}, format \\ "") do
      url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
     case OAuth2.Client.delete(client(website_url,access_token),url) do
-      {:ok, %OAuth2.Response{body: response}} ->
-        format_output(format,response)
-      {:error, %OAuth2.Response{status_code: 401, body: body}} ->
-        Logger.error("Unauthorized token")
+      {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
+        {:ok, format_output(format,response)}
+      {:error, %OAuth2.Response{status_code: code, body: body}} ->
+        error_handler(code,body)
       {:error, %OAuth2.Error{reason: reason}} ->
-        Logger.error("Error: #{inspect reason}")
+        error_handler(500,reason)
     end
     
+  end
+
+  def error_handler(status_code,reason) do
+   logger = case status_code do
+      401 ->
+        "ExSbapi: Unauthorized token"
+      404 ->
+        "ExSbapi: No entities found"
+      _ ->
+        "ExSbapi: #{inspect reason}"
+    end
+
+     case Logger.error(logger) do
+       :ok ->
+        {:error, logger}
+      {:error, reason} ->
+        {:error, "ExSbapi: Unable to Log the follwing error #{inspect reason}"}
+     end
+
   end
 
   defp parse_params(params) do

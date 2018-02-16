@@ -113,7 +113,7 @@ defmodule ExSbapi do
   end
 
   def get_sb_countries(website_url,access_token, format \\ "json") do
-    object_params = %{object: "countries", body: "", params: %{}, format: format}
+    object_params = %{object: "countries", body: "", params: Helper.default_empty_params, format: format}
     client_params = %{website_url: website_url,access_token: access_token}
     get_request(client_params,object_params)
   end

@@ -58,7 +58,6 @@ defmodule ExSbapi do
 
   def get_request(%{website_url: website_url,access_token: access_token},%{object: object, params: params, format: format,body: body})do
     ShopbuilderApi.get(website_url,access_token,object,params,format)
-    end
   end
 
   def get_request(_,_)do

@@ -26,8 +26,12 @@ defmodule ShopbuilderApi do
     case OAuth2.Client.get(client,url) do
       {:ok, %OAuth2.Response{body: response}} ->
         format_output(format,response)
-      {:error, %OAuth2.Response{status_code: status_code, body: body}} ->
-        Logger.error("Status code: "<> status_code <>" Unauthorized token")
+      {:error, %OAuth2.Response{status_code: 401, body: body}} ->
+        Logger.error("Unauthorized token")
+      {:error, %OAuth2.Response{status_code: 404, body: body}} ->
+        Logger.error("No entities found")
+      {:error, %OAuth2.Response{status_code: status, body: body}} ->
+        Logger.error("Unknown error: #{inspect body}")
       {:error, %OAuth2.Error{reason: reason}} ->
         Logger.error("Error: #{inspect reason}")
     end

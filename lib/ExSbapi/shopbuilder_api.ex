@@ -3,7 +3,7 @@ defmodule ShopbuilderApi do
 	
 	defp api_endpoints do
 	    api_root = "/api/v1/"
-	    %{"order" =>  api_root <> "order/id/!0",
+	    %{"order" =>  api_root <> "order/uuid/!0",
 	      "customer_profile" => api_root <> "customer-profile",
 	      "payment_options" => api_root <> "order-payment-methods/id/!0",
 	      "shipping_options" => api_root <> "order-shipping-methods/id/!0",

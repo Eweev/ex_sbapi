@@ -47,7 +47,7 @@ defmodule ShopbuilderApi do
   end
 
   def post(website_url,access_token, object,body \\ "", params \\ %{}, format \\ "") do
-     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
+    url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
     case OAuth2.Client.post(client(website_url,access_token),url, body,["Content-Type": "application/json"]) do
       {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
         {:ok, format_output(format,response)}

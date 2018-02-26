@@ -3,8 +3,9 @@ defmodule ShopbuilderApi do
 	
 	defp api_endpoints do
 	    api_root = "/api/v1/"
-	    %{"order" =>  api_root <> "order/id/!0",
+	    %{"order" =>  api_root <> "order/uuid/!0",
 	      "customer_profile" => api_root <> "customer-profile",
+        "customer_profile_uuid" => api_root <> "customer-profile/uuid/!0",
 	      "payment_options" => api_root <> "order-payment-methods/id/!0",
 	      "shipping_options" => api_root <> "order-shipping-methods/id/!0",
         "subscribe" => api_root <> "sb_webhooks/subscribe_webhook",
@@ -22,8 +23,7 @@ defmodule ShopbuilderApi do
 
   def get(website_url,access_token,object, params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
-    client = client(website_url,access_token)
-    case OAuth2.Client.get(client,url) do
+    case OAuth2.Client.get(client(website_url,access_token),url) do
       {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
         {:ok, format_output(format,response)}
       {:error, %OAuth2.Response{status_code: code, body: body}} ->
@@ -35,7 +35,7 @@ defmodule ShopbuilderApi do
 
   def put(website_url,access_token ,object, body \\ "", params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
-    case OAuth2.Client.put(client(website_url,access_token),url, to_json(body),["Content-Type": "application/json"]) do
+    case OAuth2.Client.put(client(website_url,access_token),url, body,["Content-Type": "application/json"]) do
       {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
         {:ok, format_output(format,response)}
       {:error, %OAuth2.Response{status_code: code, body: body}} ->
@@ -47,7 +47,7 @@ defmodule ShopbuilderApi do
   end
 
   def post(website_url,access_token, object,body \\ "", params \\ %{}, format \\ "") do
-     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
+    url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
     case OAuth2.Client.post(client(website_url,access_token),url, body,["Content-Type": "application/json"]) do
       {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
         {:ok, format_output(format,response)}

@@ -3,15 +3,17 @@ defmodule ShopbuilderApi do
 	
 	defp api_endpoints do
 	    api_root = "/api/v1/"
-	    %{"order" =>  api_root <> "order/id/!0",
+	    %{"order" =>  api_root <> "order/uuid/!0",
 	      "customer_profile" => api_root <> "customer-profile",
+        "customer_profile_uuid" => api_root <> "customer-profile/uuid/!0",
 	      "payment_options" => api_root <> "order-payment-methods/id/!0",
 	      "shipping_options" => api_root <> "order-shipping-methods/id/!0",
         "subscribe" => api_root <> "sb_webhooks/subscribe_webhook",
         "get_events" => api_root <> "sb_webhooks",
         "unsubscribe" => api_root <> "sb_webhooks/unsubscribe_webhook",
         "roles" => api_root <> "sb_roles",
-        "restricted" => api_root <> "sb_api_config"
+        "restricted" => api_root <> "sb_api_config",
+        "countries" => api_root <> "fetch-countries"
 	    }
   	end
 
@@ -21,39 +23,38 @@ defmodule ShopbuilderApi do
 
   def get(website_url,access_token,object, params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
-    client = client(website_url,access_token)
-    case OAuth2.Client.get(client,url) do
-      {:ok, %OAuth2.Response{body: response}} ->
-        format_output(format,response)
-      {:error, %OAuth2.Response{status_code: status_code, body: body}} ->
-        Logger.error("Status code: "<> status_code <>" Unauthorized token")
+    case OAuth2.Client.get(client(website_url,access_token),url) do
+      {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
+        {:ok, format_output(format,response)}
+      {:error, %OAuth2.Response{status_code: code, body: body}} ->
+        error_handler(code,body)
       {:error, %OAuth2.Error{reason: reason}} ->
-        Logger.error("Error: #{inspect reason}")
+        error_handler(500,reason)
     end
   end
 
   def put(website_url,access_token ,object, body \\ "", params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
-    case OAuth2.Client.put(client(website_url,access_token),url, to_json(body),["Content-Type": "application/json"]) do
-      {:ok, %OAuth2.Response{body: response}} ->
-        format_output(format,response)
-      {:error, %OAuth2.Response{status_code: 401, body: body}} ->
-        Logger.error("Unauthorized token")
+    case OAuth2.Client.put(client(website_url,access_token),url, body,["Content-Type": "application/json"]) do
+      {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
+        {:ok, format_output(format,response)}
+      {:error, %OAuth2.Response{status_code: code, body: body}} ->
+        error_handler(code,body)
       {:error, %OAuth2.Error{reason: reason}} ->
-        Logger.error(reason)
+        error_handler(500,reason)
 
     end
   end
 
   def post(website_url,access_token, object,body \\ "", params \\ %{}, format \\ "") do
-     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
+    url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
     case OAuth2.Client.post(client(website_url,access_token),url, body,["Content-Type": "application/json"]) do
-      {:ok, %OAuth2.Response{body: response}} ->
-        format_output(format,response)
-      {:error, %OAuth2.Response{status_code: 401, body: body}} ->
-        Logger.error("Unauthorized token")
+      {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
+        {:ok, format_output(format,response)}
+      {:error, %OAuth2.Response{status_code: code, body: body}} ->
+        error_handler(code,body)
       {:error, %OAuth2.Error{reason: reason}} ->
-        Logger.error("Error: #{inspect reason}")
+        error_handler(500,reason)
     end
     
   end
@@ -61,14 +62,33 @@ defmodule ShopbuilderApi do
   def delete(website_url,access_token, object, params \\ %{}, format \\ "") do
      url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
     case OAuth2.Client.delete(client(website_url,access_token),url) do
-      {:ok, %OAuth2.Response{body: response}} ->
-        format_output(format,response)
-      {:error, %OAuth2.Response{status_code: 401, body: body}} ->
-        Logger.error("Unauthorized token")
+      {:ok, %OAuth2.Response{status_code: 200,body: response}} ->
+        {:ok, format_output(format,response)}
+      {:error, %OAuth2.Response{status_code: code, body: body}} ->
+        error_handler(code,body)
       {:error, %OAuth2.Error{reason: reason}} ->
-        Logger.error("Error: #{inspect reason}")
+        error_handler(500,reason)
     end
     
+  end
+
+  def error_handler(status_code,reason) do
+   logger = case status_code do
+      401 ->
+        "ExSbapi: Unauthorized token"
+      404 ->
+        "ExSbapi: No entities found"
+      _ ->
+        "ExSbapi: #{inspect reason}"
+    end
+
+     case Logger.error(logger) do
+       :ok ->
+        {:error, logger}
+      {:error, reason} ->
+        {:error, "ExSbapi: Unable to Log the follwing error #{inspect reason}"}
+     end
+
   end
 
   defp parse_params(params) do

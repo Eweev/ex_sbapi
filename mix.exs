@@ -1,7 +1,7 @@
 defmodule ExSbapi.Mixfile do
   use Mix.Project
 
-  @version "0.1.4"
+  @version "0.1.8"
   @name "shopbuilder_api"
   @maintainers ["Jad Tarabay", "Julien Fayad"]
   @url "https://github.com/Eweev/ex_sbapi"
@@ -32,7 +32,9 @@ defmodule ExSbapi.Mixfile do
     [
       {:oauth2, "~> 0.9"},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      # Optional
+      {:plug, "~> 1.3.3 or ~> 1.4", optional: true}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
     ]

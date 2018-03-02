@@ -1,6 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
-## [0.1.5] - ?
+## [0.1.9] - 2018-03-02
+### Bugfix when setting Process as verified 
+
+## [0.1.8] - 2018-02-26
+### BugFix for PUT and GET requests
+### Updated order request from uid to uuid
+
+## [0.1.7] - 2018-02-16
+### Progress 
+- GET Customer Profile
+- GET country list
+- Centralized error handling
+
+## [0.1.6] - 2018-02-15
+### Enhancement on error handling
+
+## [0.1.5] - 2018-02-15
 ### Manage Request protection with grace period
 
 ## [0.1.4] - 2018-02-10

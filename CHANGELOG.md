@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## [0.1.10] - 2018-03-06
+### Added 
+- Set product_redirections 
+
 ## [0.1.9] - 2018-03-02
-### Bugfix when setting Process as verified 
+### Bugfix when setting Process as verified
 
 ## [0.1.8] - 2018-02-26
 ### BugFix for PUT and GET requests

@@ -264,8 +264,6 @@ defmodule ExSbapi do
 
   end
 
- 
-
   def get_restricted_mode(access_token,client \\ %{}) do
      case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
@@ -281,6 +279,17 @@ defmodule ExSbapi do
      case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
           object_params = %{object: "restricted", body: Helper.body_for_mode(restricted,mode,authorized_roles), params: Helper.default_empty_params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          post_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
+  def product_redirections(status,access_token,client \\ %{}) do
+    case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "product_redirections", body: Helper.product_redirection(status), params: Helper.default_empty_params, format: "json"}
           client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
           post_request(client_params,object_params)
       {:error, reason} ->

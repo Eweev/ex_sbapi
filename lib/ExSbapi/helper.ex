@@ -30,5 +30,11 @@ defmodule ExSbapi.Helper do
 		}
   end
 
+  def product_redirection(status) do
+		%{
+			status: status
+		}
+  end
+
 
 end

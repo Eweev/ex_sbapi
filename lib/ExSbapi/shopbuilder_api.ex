@@ -13,7 +13,8 @@ defmodule ShopbuilderApi do
         "unsubscribe" => api_root <> "sb_webhooks/unsubscribe_webhook",
         "roles" => api_root <> "sb_roles",
         "restricted" => api_root <> "sb_api_config",
-        "countries" => api_root <> "fetch-countries"
+        "countries" => api_root <> "fetch-countries",
+        "product_redirections" => api_root <> "sb_api_config/product_redirections"
 	    }
   	end
 

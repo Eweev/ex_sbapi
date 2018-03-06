@@ -1,5 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## [0.1.9] - 2018-03-06
+### Added
+- Get hashed payload
+
 ## [0.1.5] - ?
 ### Manage Request protection with grace period
 

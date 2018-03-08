@@ -91,7 +91,7 @@ if Code.ensure_loaded?(Plug) do
 	    (:crypto.hmac(:sha256, @hash_key, token))
 	    |> Base.encode16(case: :lower) 
 	    |> String.to_atom() 
-	    |> GenServer.call(:set_verification, true)
+	    |> GenServer.cast({:set_verification, true})
 	  end
 	end
 end

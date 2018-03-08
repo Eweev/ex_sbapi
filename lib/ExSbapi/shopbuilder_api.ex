@@ -14,7 +14,8 @@ defmodule ShopbuilderApi do
         "roles" => api_root <> "sb_roles",
         "restricted" => api_root <> "sb_api_config",
         "countries" => api_root <> "fetch-countries",
-        "product_redirections" => api_root <> "sb_api_config/product_redirections"
+        "product_redirections" => api_root <> "sb_api_config/product_redirections",
+        "user" => api_root <> "sb_user"
 	    }
   	end
 

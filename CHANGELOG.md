@@ -1,5 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [0.1.11] - 2018-04-14
+### Added 
+- Generate login link
+
 ## [0.1.10] - 2018-03-06
 ### Added 
 - Set product_redirections 

@@ -308,4 +308,33 @@ defmodule ExSbapi do
     end
   end
 
+  @doc """
+    This function is expecting `list_of_uuid`,`data`, `access_token` and `client`
+    
+    The format of data should be:
+      data: %{
+        start: %{
+          year: "2018",
+          month: "4",
+          day: "12"
+        },
+        end: %{
+          year: "2018",
+          month: "4",
+          day: "20"
+        }
+      }
+  """
+
+  def order_query(list_of_uuid,date,access_token,client \\ %{}) do
+    case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "order_query", body: Helper.generate_order_query_object(list_of_uuid,date), params: Helper.default_empty_params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          post_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
 end

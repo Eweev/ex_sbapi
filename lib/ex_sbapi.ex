@@ -309,10 +309,10 @@ defmodule ExSbapi do
   end
 
   @doc """
-    This function is expecting `list_of_uuid`,`data`, `access_token` and `client`
+    This function is expecting `list_of_uuid`,`date`, `access_token` and `client`
     
-    The format of data should be:
-      data: %{
+    The format of date should be:
+      date: %{
         start: %{
           year: "2018",
           month: "4",

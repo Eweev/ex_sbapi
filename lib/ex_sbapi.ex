@@ -104,6 +104,10 @@ defmodule ExSbapi do
       "uuid" ->
         new_filter = Map.put_new(params.filter, :user_uuid, user_id)
         Map.put(params, :filter, new_filter)
+      "uuid && active" ->
+        new_filter = Map.put_new(params.filter, :user_uuid, user_id)
+                    |> Map.put_new(:status, 1)
+        Map.put(params, :filter, new_filter)
     end
 
     object_params = %{object: "customer_profile", body: "", params: params, format: format}

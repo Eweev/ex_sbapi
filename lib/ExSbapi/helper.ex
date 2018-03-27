@@ -62,7 +62,7 @@ defmodule ExSbapi.Helper do
 				}
 			}
   		},
-  		fields: ["status", "order_id", "user", "order_total", "order_balance", "created"]
+  		fields: ["status", "order_id", "user", "order_total", "order_balance", "created", "closed_date"]
   	}
   end
 

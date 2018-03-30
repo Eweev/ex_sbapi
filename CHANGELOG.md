@@ -1,13 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.1.12] - 2018-04-20
+## [0.1.12] - 2018-03-30
 ### Work on progress
 - Add a new endpoint to support user-edit
 - Support order-query to get all orders that are issued on a specific date
 - Add option on get_address to get the active addresses by using "uuid && active"
 
-## [0.1.11] - 2018-04-14
+## [0.1.11] - 2018-03-14
 ### Added 
 - Generate login link
 

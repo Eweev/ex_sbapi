@@ -104,6 +104,10 @@ defmodule ExSbapi do
       "uuid" ->
         new_filter = Map.put_new(params.filter, :user_uuid, user_id)
         Map.put(params, :filter, new_filter)
+      "uuid && active" ->
+        new_filter = Map.put_new(params.filter, :user_uuid, user_id)
+                    |> Map.put_new(:status, 1)
+        Map.put(params, :filter, new_filter)
     end
 
     object_params = %{object: "customer_profile", body: "", params: params, format: format}
@@ -290,6 +294,46 @@ defmodule ExSbapi do
     case Config.check_client_params(client) do
       {:ok,finalized_client_map} ->
           object_params = %{object: "product_redirections", body: Helper.product_redirection(status), params: Helper.default_empty_params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          post_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
+  def generate_auto_login_link(user_uuid,destination_url,access_token,client \\ %{}) do
+    case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "auto_login", body: Helper.generate_auto_login_link(user_uuid,destination_url), params: Helper.default_empty_params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          post_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
+  @doc """
+    This function is expecting `list_of_uuid`,`date`, `access_token` and `client`
+    
+    The format of date should be:
+      date: %{
+        start: %{
+          year: "2018",
+          month: "4",
+          day: "12"
+        },
+        end: %{
+          year: "2018",
+          month: "4",
+          day: "20"
+        }
+      }
+  """
+
+  def order_query(list_of_uuid,date,access_token,client \\ %{}) do
+    case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "order_query", body: Helper.generate_order_query_object(list_of_uuid,date), params: Helper.default_empty_params, format: "json"}
           client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
           post_request(client_params,object_params)
       {:error, reason} ->

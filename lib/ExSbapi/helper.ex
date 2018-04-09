@@ -66,5 +66,11 @@ defmodule ExSbapi.Helper do
   	}
   end
 
+  def generate_redirection_to_product_query(status) do
+  	%{
+  		status: status
+  	}
+  end
+
 
 end

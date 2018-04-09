@@ -341,4 +341,15 @@ defmodule ExSbapi do
     end
   end
 
+  def redirection_to_product(status,access_token,client) do
+    case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+          object_params = %{object: "redirection_to_product", body: Helper.generate_redirection_to_product_query(status), params: Helper.default_empty_params, format: "json"}
+          client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+          post_request(client_params,object_params)
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
 end

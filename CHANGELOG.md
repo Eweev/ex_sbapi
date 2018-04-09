@@ -1,5 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## [0.1.13] - 2018-04-09
+- Add redirection to product when user adds to cart
 
 ## [0.1.12] - 2018-03-30
 ### Added

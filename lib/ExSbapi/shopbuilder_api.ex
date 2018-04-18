@@ -19,7 +19,8 @@ defmodule ShopbuilderApi do
         "user_edit" => api_root <> "sb_user/uuid/!0",
         "auto_login" => api_root <> "sb_user/autologin_link",
         "order_query" => api_root <> "order/query",
-        "redirection_to_product" => api_root <> "sb_api_config/add_to_cart_redirect"
+        "redirection_to_product" => api_root <> "sb_api_config/add_to_cart_redirect",
+        "email" => api_root <> "sb_user/email/!0.json"
 	    }
   	end
 

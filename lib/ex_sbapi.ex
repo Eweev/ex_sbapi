@@ -352,4 +352,21 @@ defmodule ExSbapi do
     end
   end
 
+    def check_email(access_token,email,client \\ %{}) do
+    params =  %{
+      filter: %{},
+      uri_token: [
+        email
+      ]
+    }
+    case Config.check_client_params(client) do
+      {:ok,finalized_client_map} ->
+        object_params = %{object: "email", body: "", params: params, format: "json"}
+        client_params = %{website_url: finalized_client_map.website_url,access_token: access_token}
+        get_request(client_params,object_params) 
+      {:error, reason} ->
+        raise reason 
+    end
+  end
+
 end

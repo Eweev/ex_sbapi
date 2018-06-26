@@ -4,7 +4,7 @@ defmodule ShopbuilderOauth do
 
   # Initialize call should be this function where it should be found in router
   def shopbuilder_authorize_url!("shopbuilder", scope, client_params) do
-    oauth_authorize_url!([scope: scope, state: "xyz"], client_params)
+    oauth_authorize_url!([scope: scope, state: client_params.website_url], client_params)
   end
 
   # If provider is different than shopbuilder an error will be raised

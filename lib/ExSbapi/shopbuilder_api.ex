@@ -22,7 +22,9 @@ defmodule ShopbuilderApi do
       "auto_login" => api_root <> "sb_user/autologin_link",
       "order_query" => api_root <> "order/query",
       "redirection_to_product" => api_root <> "sb_api_config/add_to_cart_redirect",
-      "email" => api_root <> "sb_user/email/!0.json"
+      "email" => api_root <> "sb_user/email/!0.json",
+      "buy_link_enable" => api_root <> "sb_api_config/buy_link",
+      "buy_link_generate" => api_root <> "sb_buy/!0/!1",
     }
   end
 
@@ -32,7 +34,7 @@ defmodule ShopbuilderApi do
 
   def get(website_url, access_token, object, params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
-
+    IO.inspect url
     case OAuth2.Client.get(client(website_url, access_token), url) do
       {:ok, %OAuth2.Response{status_code: 200, body: response}} ->
         {:ok, format_output(format, response)}
@@ -47,7 +49,7 @@ defmodule ShopbuilderApi do
 
   def put(website_url, access_token, object, body \\ "", params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
-
+    
     case OAuth2.Client.put(
            client(website_url, access_token),
            url,

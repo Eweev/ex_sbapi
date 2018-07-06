@@ -72,5 +72,16 @@ defmodule ExSbapi.Helper do
   	}
   end
 
+	def generate_buy_link_enable_body(status) do
+  	%{
+  		status: status
+  	}
+  end
+
+	def params_with_buy_link(sku, qty) do
+    %{ filter: %{},
+       uri_token: [sku, qty]
+     }
+  end
 
 end

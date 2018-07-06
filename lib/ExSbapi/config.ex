@@ -73,7 +73,7 @@ defmodule Config do
     else
 
       missing_message = Enum.reduce(valid_list,"",fn (atoms_required,acc) -> 
-          acc <> " " <>atoms_required
+          acc <> " " <> atoms_required
       end)
 
         {:error,"Please check the following atoms: " <> missing_message}

@@ -565,4 +565,48 @@ defmodule ExSbapi do
         raise reason
     end
   end
+
+  def buy_link_enable(status, access_token, client) do
+    case Config.check_client_params(client) do
+      {:ok, finalized_client_map} ->
+        object_params = %{
+          object: "buy_link_enable",
+          body: Helper.generate_buy_link_enable_body(status),
+          params: Helper.default_empty_params(),
+          format: "json"
+        }
+
+        client_params = %{
+          website_url: finalized_client_map.website_url,
+          access_token: access_token
+        }
+
+        post_request(client_params, object_params)
+
+      {:error, reason} ->
+        raise reason
+    end
+  end
+
+  def buy_link_generate(sku, qty, access_token, client) do
+    case Config.check_client_params(client) do
+      {:ok, finalized_client_map} ->
+        object_params = %{
+          object: "buy_link_generate",
+          body: "",
+          params: Helper.params_with_buy_link(sku, qty),
+          format: ""
+        }
+
+        client_params = %{
+          website_url: finalized_client_map.website_url,
+          access_token: access_token
+        }
+
+        get_request(client_params, object_params)
+
+      {:error, reason} ->
+        raise reason
+    end
+  end
 end

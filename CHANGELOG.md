@@ -1,5 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [0.1.16] - 2018-07-06
+- Add support for the new buy link functionality
+
+## [0.1.15] - 2018-06-26
+- Rely on the state parameter to get the websiteURL for the oAuth2 Token generation
+
+## [0.1.14] - 2018-05-25
+- Add support for the user account email verification endpoint
+
 ## [0.1.13] - 2018-04-09
 - Add redirection to product when user adds to cart
 

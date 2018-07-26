@@ -213,7 +213,7 @@ defmodule ExSbapi do
   end
 
   def add_shipping(value, order_id, website_url, access_token, format \\ "json") do
-    order_object = %ExSbapi.Order.Shipping{
+	order_object = %ExSbapi.Order.Shipping{
       shipping: %{
         service: value
       }
@@ -608,5 +608,35 @@ defmodule ExSbapi do
       {:error, reason} ->
         raise reason
     end
+  end
+
+  def add_customer_profile(params) do
+    client_params = %{
+      website_url: params.website_url,
+      access_token: params.access_token
+    }
+    object_params = %{
+      object: "customer_profile",
+      body: params.value,
+      params: Helper.default_empty_params(),
+      format: params.format
+    }
+
+    ExSbapi.post_request(client_params, object_params)
+  end
+
+  def add_customer_profile_to_order(params) do
+    client_params = %{
+      website_url: params.website_url,
+      access_token: params.access_token
+    }
+    object_params = %{
+      object: "order",
+      body: params.value,
+      params: Helper.params_with_order_id(params.order_uuid),
+      format: params.format
+    }
+
+    ExSbapi.put_request(client_params, object_params)
   end
 end

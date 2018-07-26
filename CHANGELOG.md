@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.17] - 2018-07-28
+- Add POST Customer Profile
+- Add PUT order to add customer profile
+
 ## [0.1.16] - 2018-07-06
 - Add support for the new buy link functionality
 

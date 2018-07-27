@@ -35,7 +35,7 @@ defmodule ShopbuilderApi do
   def get(website_url, access_token, object, params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
 
-    case OAuth2.Client.get(client(website_url, access_token), url) do
+    case OAuth2.Client.get(client(website_url, access_token), url, [], [{:recv_timeout, 10000}]) do
       {:ok, %OAuth2.Response{status_code: 200, body: response}} ->
         {:ok, format_output(format, response)}
 

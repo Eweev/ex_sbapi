@@ -25,6 +25,7 @@ defmodule ShopbuilderApi do
       "email" => api_root <> "sb_user/email/!0.json",
       "buy_link_enable" => api_root <> "sb_api_config/buy_link",
       "buy_link_generate" => api_root <> "sb_buy/!0/!1",
+      "settings" => api_root <> "installed_apps/settings"
     }
   end
 
@@ -49,7 +50,7 @@ defmodule ShopbuilderApi do
 
   def put(website_url, access_token, object, body \\ "", params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
-    
+
     case OAuth2.Client.put(
            client(website_url, access_token),
            url,
@@ -151,12 +152,7 @@ defmodule ShopbuilderApi do
   end
 
   defp to_object(x) do
-    IO.inspect(x)
-    Poison.decode(x) |> IO.inspect()
-    # case Poison.decode(x) do
-    #   {:ok, body} ->
-    #     body
-    # end
+    Poison.decode(x)
   end
 
   defp to_json(x) do

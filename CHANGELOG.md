@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.19] - 2018-08-06
+- Add POST to set app settings
+
 ## [0.1.18] - 2018-07-29
 - Change Timeout for get request for 10 seconds
 

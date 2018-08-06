@@ -213,7 +213,7 @@ defmodule ExSbapi do
   end
 
   def add_shipping(value, order_id, website_url, access_token, format \\ "json") do
-	order_object = %ExSbapi.Order.Shipping{
+    order_object = %ExSbapi.Order.Shipping{
       shipping: %{
         service: value
       }
@@ -615,6 +615,7 @@ defmodule ExSbapi do
       website_url: params.website_url,
       access_token: params.access_token
     }
+
     object_params = %{
       object: "customer_profile",
       body: params.value,
@@ -630,6 +631,7 @@ defmodule ExSbapi do
       website_url: params.website_url,
       access_token: params.access_token
     }
+
     object_params = %{
       object: "order",
       body: params.value,
@@ -638,5 +640,39 @@ defmodule ExSbapi do
     }
 
     ExSbapi.put_request(client_params, object_params)
+  end
+
+  @doc """
+  Set app settings 
+
+  ## Endpoint: 
+  This function is being called from `/lib/zaq_web/controllers/auth_controller.ex` by 
+  `callback/2`
+
+  ## Parameters: 
+  `website_url::String` , `access_token::String`, `body::Map %{scripts: "", html: "", hash_key: ""}`
+
+  ## Examples: 
+      iex> set_app_settings(
+        "http://merhi.dev.shopbuilder.me", 
+        "01a1f82c447c1ffc19f54a8174ae1b8e648cc864",
+        %{hash_key: "5tQ4jHbQAqdfjI3cNEqoLAIChw6ZK2BI9tJR9omkzNCAFZS7odwcx+yC5xxTgt47wUg0iaoKuoRyClhU/3+okQ=="}
+      )
+      {:ok, %{"success": ["App settings has been updated."]}}
+  """
+  def set_app_settings(website_url, access_token, body) do
+    client_params = %{
+      website_url: website_url,
+      access_token: access_token
+    }
+
+    object_params = %{
+      object: "settings",
+      body: body,
+      params: Helper.default_empty_params(),
+      format: ""
+    }
+
+    ExSbapi.post_request(client_params, object_params)
   end
 end

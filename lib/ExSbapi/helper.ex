@@ -93,4 +93,11 @@ defmodule ExSbapi.Helper do
       uri_token: [sku, qty]
     }
   end
+
+  def params_with_custom_shipping_method(method_name) do
+    %{
+      filter: %{},
+      uri_token: [method_name]
+    }
+  end
 end

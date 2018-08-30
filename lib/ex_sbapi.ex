@@ -289,11 +289,11 @@ defmodule ExSbapi do
     end
   end
 
-  def subscribe_to_event(event, endpoint, access_token, client \\ %{}) do
+  def subscribe_to_event(event, endpoint, access_token, client \\ %{}, object \\ "subscribe") do
     case Config.check_client_params(client) do
       {:ok, finalized_client_map} ->
         object_params = %{
-          object: "subscribe",
+          object: object,
           body: %{"#{event}" => "#{endpoint}"},
           params: Helper.default_empty_params(),
           format: "json"
@@ -311,11 +311,11 @@ defmodule ExSbapi do
     end
   end
 
-  def unsubscribe_from_event(endpoint, access_token, client \\ %{}) do
+  def unsubscribe_from_event(endpoint, access_token, client \\ %{}, object \\ "unsubscribe") do
     case Config.check_client_params(client) do
       {:ok, finalized_client_map} ->
         object_params = %{
-          object: "unsubscribe",
+          object: object,
           body: %{"eventIds" => endpoint},
           params: Helper.default_empty_params(),
           format: "json"
@@ -333,11 +333,11 @@ defmodule ExSbapi do
     end
   end
 
-  def unsubscribe_from_all_events(access_token, client \\ %{}) do
+  def unsubscribe_from_all_events(access_token, client \\ %{}, object \\ "unsubscribe") do
     case Config.check_client_params(client) do
       {:ok, finalized_client_map} ->
         object_params = %{
-          object: "unsubscribe",
+          object: object,
           body: %{"eventIds" => ["all"]},
           params: Helper.default_empty_params(),
           format: "json"
@@ -675,4 +675,103 @@ defmodule ExSbapi do
 
     ExSbapi.post_request(client_params, object_params)
   end
+
+  def get_subscribed_emails(access_token, client \\ %{}) do
+    case Config.check_client_params(client) do
+      {:ok, finalized_client_map} ->
+        object_params = %{
+          object: "get_subscribed_emails",
+          body: "",
+          params: Helper.default_empty_params(),
+          format: "json"
+        }
+
+        client_params = %{
+          website_url: finalized_client_map.website_url,
+          access_token: access_token
+        }
+
+        get_request(client_params, object_params)
+
+      {:error, reason} ->
+        raise reason
+    end
+  end
+
+  def subscribe_email(event, endpoint, access_token, client \\ %{}) do
+    subscribe_to_event(event, endpoint, access_token, client, "subscribe_email")
+  end
+
+  def unsubscribe_email(endpoint, access_token, client \\ %{}) do
+    unsubscribe_from_event(endpoint, access_token, client, "unsubscribe_email")
+  end
+
+  def unsubscribe_email_all(access_token, client \\ %{}) do
+    unsubscribe_from_all_events(access_token, client, "unsubscribe_email")
+  end
+
+  def get_custom_shipping(website_url, access_token) do
+    client_params = %{
+      website_url: website_url,
+      access_token: access_token
+    }
+
+    object_params = %{
+      object: "custom_shipping",
+      body: "",
+      params: Helper.default_empty_params(),
+      format: "json"
+    }
+
+    ExSbapi.get_request(client_params, object_params)
+  end
+
+  def add_custom_shipping(website_url, access_token, body) do
+    client_params = %{
+      website_url: website_url,
+      access_token: access_token
+    }
+
+    object_params = %{
+      object: "custom_shipping",
+      body: body,
+      params: Helper.default_empty_params(),
+      format: "json"
+    }
+
+    ExSbapi.post_request(client_params, object_params)
+  end
+
+  def update_custom_shipping(website_url, access_token, body, method_name) do
+    client_params = %{
+      website_url: website_url,
+      access_token: access_token
+    }
+
+    object_params = %{
+      object: "update_custom_shipping",
+      body: body,
+      params: Helper.params_with_custom_shipping_method(method_name),
+      format: "json"
+    }
+
+    ExSbapi.put_request(client_params, object_params)
+  end
+
+  def delete_custom_shipping(website_url, access_token, method_name) do
+    client_params = %{
+      website_url: website_url,
+      access_token: access_token
+    }
+
+    object_params = %{
+      object: "delete_custom_shipping",
+      body: "",
+      params: Helper.params_with_custom_shipping_method(method_name),
+      format: "json"
+    }
+
+    ExSbapi.delete_request(client_params, object_params)
+  end
+
 end

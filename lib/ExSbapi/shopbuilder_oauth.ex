@@ -1,4 +1,5 @@
 defmodule ShopbuilderOauth do
+  @moduledoc false
   use OAuth2.Strategy
   alias OAuth2.Strategy.AuthCode
 

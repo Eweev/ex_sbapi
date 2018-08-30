@@ -126,7 +126,8 @@ defmodule ExSbapi do
       case option do
         "" ->
           new_filter =
-            Map.put_new(params.filter, :uid, user_id)
+            params.filter
+            |> Map.put_new(:uid, user_id)
             |> Map.put_new(:type, "shipping")
 
           Map.put(params, :filter, new_filter)
@@ -137,7 +138,8 @@ defmodule ExSbapi do
 
         "uuid && active" ->
           new_filter =
-            Map.put_new(params.filter, :user_uuid, user_id)
+            params.filter
+            |> Map.put_new(:user_uuid, user_id)
             |> Map.put_new(:status, 1)
 
           Map.put(params, :filter, new_filter)
@@ -378,10 +380,10 @@ defmodule ExSbapi do
   end
 
   def get_payload(your_hash_key, payload, sb_hash, format \\ "") do
-    if(Helper.check_hash(your_hash_key, payload, sb_hash)) do
+    if Helper.check_hash(your_hash_key, payload, sb_hash) do
       decoded_data = Base.decode64!(payload, padding: false)
 
-      if(format == "") do
+      if format == "" do
         {:ok, data} = Poison.decode(decoded_data)
         data
       else

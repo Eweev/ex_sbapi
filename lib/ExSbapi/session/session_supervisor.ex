@@ -1,8 +1,9 @@
 defmodule ExSbapi.Process.SessionSupervisor do
+  @moduledoc false
   use DynamicSupervisor
   # use GenServer
 
-  def start_link() do
+  def start_link do
     DynamicSupervisor.start_link(__MODULE__, [], name: __MODULE__)
   end
 

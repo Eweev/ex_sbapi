@@ -1,4 +1,5 @@
 defmodule ShopbuilderApi do
+  @moduledoc false
   require Logger
 
   defp api_endpoints do
@@ -42,7 +43,7 @@ defmodule ShopbuilderApi do
   def get(website_url, access_token, object, params \\ %{}, format \\ "") do
     url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
 
-    case OAuth2.Client.get(client(website_url, access_token), url, [], [{:recv_timeout, 10000}]) do
+    case OAuth2.Client.get(client(website_url, access_token), url, [], [{:recv_timeout, 10_000}]) do
       {:ok, %OAuth2.Response{status_code: 200, body: response}} ->
         {:ok, format_output(format, response)}
 
@@ -132,8 +133,8 @@ defmodule ShopbuilderApi do
   end
 
   defp parse_params(params) do
-    if(params != %{}) do
-      if(params.filter != nil) do
+    if params != %{} do
+      if params.filter != nil do
         ret =
           params.filter
           |> Enum.reduce("?", fn {k, v}, acc -> acc = acc <> "parameters[#{k}]=#{v}&" end)

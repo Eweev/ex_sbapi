@@ -1,8 +1,9 @@
 defmodule ExSbapi.Helper do
+  @moduledoc false
   def check_hash(your_hash_key, payload, sb_hash) do
     hashed_string = :crypto.hmac(:sha256, your_hash_key, payload) |> Base.encode16(case: :lower)
 
-    if(hashed_string == sb_hash) do
+    if hashed_string == sb_hash do
       true
     else
       false

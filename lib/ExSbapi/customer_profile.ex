@@ -1,5 +1,7 @@
-defmodule ExSbapi.CustomerProfile.Customer_address do
-  defstruct country: "",
+defmodule ExSbapi.CustomerProfile.CustomerAddress do
+    @moduledoc false
+
+    defstruct country: "",
             name_line: "",
             locality: "",
             postal_code: "",
@@ -8,8 +10,10 @@ defmodule ExSbapi.CustomerProfile.Customer_address do
             fax_number: ""
 end
 
-defmodule ExSbapi.CustomerProfile.New_address do
-  defstruct customer_address: %ExSbapi.CustomerProfile.Customer_address{},
+defmodule ExSbapi.CustomerProfile.NewAddress do
+    @moduledoc false
+
+  defstruct customer_address: %ExSbapi.CustomerProfile.CustomerAddress{},
             reference: "",
             type: "",
             uid: ""

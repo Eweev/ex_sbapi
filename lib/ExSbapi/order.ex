@@ -1,31 +1,36 @@
 defmodule ExSbapi.Order.Mail do
+  @moduledoc false
   defstruct mail: ""
 end
 
 defmodule ExSbapi.Order.Shipping do
+  @moduledoc false
   defstruct shipping: %{
               service: String
             }
 end
 
 defmodule ExSbapi.Order.Coupon do
+  @moduledoc false
   defstruct coupons: [
               %{code: ""}
             ]
 end
 
 defmodule ExSbapi.Order.Payment do
+  @moduledoc false
   defstruct payment: %{
               method: ""
             }
 end
 
 defmodule ExSbapi.Order.CustomerShipping do
-  alias ExSbapi.CustomerProfile.New_address
-  alias ExSbapi.CustomerProfile.Customer_address
+  @moduledoc false
+  alias ExSbapi.CustomerProfile.CustomerAddress
+  alias ExSbapi.CustomerProfile.NewAddress
 
-  defstruct customer_shipping: %ExSbapi.CustomerProfile.New_address{
-              customer_address: %ExSbapi.CustomerProfile.Customer_address{
+  defstruct customer_shipping: %ExSbapi.CustomerProfile.NewAddress{
+              customer_address: %ExSbapi.CustomerProfile.CustomerAddress{
                 country: "",
                 name_line: "",
                 locality: "",

@@ -25,7 +25,13 @@ defmodule ShopbuilderApi do
       "email" => api_root <> "sb_user/email/!0.json",
       "buy_link_enable" => api_root <> "sb_api_config/buy_link",
       "buy_link_generate" => api_root <> "sb_buy/!0/!1",
-      "settings" => api_root <> "installed_apps/settings"
+      "settings" => api_root <> "installed_apps/settings",
+      "get_subscribed_emails" => api_root <> "sb_emails",
+      "subscribe_email" => api_root <> "sb_emails/subscribe_email",
+      "unsubscribe_email" => api_root <> "sb_emails/unsubscribe_email",
+      "custom_shipping" => api_root <> "custom_shipping",
+      "delete_custom_shipping" => api_root <> "custom_shipping/!0",
+      "update_custom_shipping" => api_root <> "custom_shipping/!0",
     }
   end
 

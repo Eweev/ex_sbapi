@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.20] - 2018-08-30
+- Add Custom Shipping method management
+- Add Email Alteration webhook management
+- Now compatible with Elixir 1.7
+
 ## [0.1.19] - 2018-08-06
 - Add POST to set app settings
 

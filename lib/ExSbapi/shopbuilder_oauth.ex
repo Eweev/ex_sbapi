@@ -9,7 +9,7 @@ defmodule ShopbuilderOauth do
   end
 
   # If provider is different than shopbuilder an error will be raised
-  def shopbuilder_authorize_url!(_, scope, client_params) do
+  def shopbuilder_authorize_url!(_, _, _) do
     raise "No matching provider available"
   end
 
@@ -56,13 +56,13 @@ defmodule ShopbuilderOauth do
 
   # strategy callbacks
   def authorize_url(client, params) do
-    OAuth2.Strategy.AuthCode.authorize_url(client, params)
+    AuthCode.authorize_url(client, params)
   end
 
   def get_token(client, params, headers) do
     client
     |> put_param(:client_secret, client.client_secret)
     |> put_header("accept", "application/json")
-    |> OAuth2.Strategy.AuthCode.get_token(params, headers)
+    |> AuthCode.get_token(params, headers)
   end
 end

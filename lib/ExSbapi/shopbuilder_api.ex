@@ -41,7 +41,7 @@ defmodule ShopbuilderApi do
   end
 
   def get(website_url, access_token, object, params \\ %{}, format \\ "") do
-    url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
+    url = modify_url(api_endpoints()[object] <> parse_params(params), params.uri_token)
 
     case OAuth2.Client.get(client(website_url, access_token), url, [], [{:recv_timeout, 10_000}]) do
       {:ok, %OAuth2.Response{status_code: 200, body: response}} ->
@@ -56,7 +56,7 @@ defmodule ShopbuilderApi do
   end
 
   def put(website_url, access_token, object, body \\ "", params \\ %{}, format \\ "") do
-    url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
+    url = modify_url(api_endpoints()[object] <> parse_params(params), params.uri_token)
 
     case OAuth2.Client.put(
            client(website_url, access_token),
@@ -76,7 +76,7 @@ defmodule ShopbuilderApi do
   end
 
   def post(website_url, access_token, object, body \\ "", params \\ %{}, format \\ "") do
-    url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
+    url = modify_url(api_endpoints()[object] <> parse_params(params), params.uri_token)
 
     case OAuth2.Client.post(
            client(website_url, access_token),
@@ -96,7 +96,7 @@ defmodule ShopbuilderApi do
   end
 
   def delete(website_url, access_token, object, params \\ %{}, format \\ "") do
-    url = modify_url(api_endpoints[object] <> parse_params(params), params.uri_token)
+    url = modify_url(api_endpoints()[object] <> parse_params(params), params.uri_token)
 
     case OAuth2.Client.delete(client(website_url, access_token), url) do
       {:ok, %OAuth2.Response{status_code: 200, body: response}} ->
@@ -135,9 +135,8 @@ defmodule ShopbuilderApi do
   defp parse_params(params) do
     if params != %{} do
       if params.filter != nil do
-        ret =
-          params.filter
-          |> Enum.reduce("?", fn {k, v}, acc -> acc = acc <> "parameters[#{k}]=#{v}&" end)
+        params.filter
+        |> Enum.reduce("?", fn {k, v}, acc -> acc <> "parameters[#{k}]=#{v}&" end)
       else
         ""
       end
@@ -156,10 +155,6 @@ defmodule ShopbuilderApi do
       end)
 
     currated_command
-  end
-
-  defp to_object(x) do
-    Poison.decode(x)
   end
 
   defp to_json(x) do

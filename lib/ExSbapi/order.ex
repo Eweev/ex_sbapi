@@ -29,8 +29,8 @@ defmodule ExSbapi.Order.CustomerShipping do
   alias ExSbapi.CustomerProfile.CustomerAddress
   alias ExSbapi.CustomerProfile.NewAddress
 
-  defstruct customer_shipping: %ExSbapi.CustomerProfile.NewAddress{
-              customer_address: %ExSbapi.CustomerProfile.CustomerAddress{
+  defstruct customer_shipping: %NewAddress{
+              customer_address: %CustomerAddress{
                 country: "",
                 name_line: "",
                 locality: "",

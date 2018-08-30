@@ -30,7 +30,7 @@ defmodule ExSbapi do
     end
   end
 
-  def authorize_url!(provider, scope, _) do
+  def authorize_url!(_, _, _) do
     raise "Please check your third variable it should be %{client_id: _,client_secret: _,website_url: _,redirect_uri: _} For more information what each variable means please check the documation"
   end
 
@@ -42,10 +42,6 @@ defmodule ExSbapi do
       {:error, reason} ->
         raise reason
     end
-  end
-
-  defp get_token!(_, _) do
-    raise "No matching provider available"
   end
 
   def refresh_token(refresh_token, client = %{}, params \\ [], headers \\ [], opts \\ []) do
@@ -68,7 +64,7 @@ defmodule ExSbapi do
         object: object,
         params: params,
         format: format,
-        body: body
+        body: _
       }) do
     ShopbuilderApi.get(website_url, access_token, object, params, format)
   end
@@ -107,7 +103,7 @@ defmodule ExSbapi do
         object: object,
         params: params,
         format: format,
-        body: body
+        body: _
       }) do
     ShopbuilderApi.delete(website_url, access_token, object, params, format)
   end

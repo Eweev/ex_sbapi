@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.21] - 2018-09-14
+- Clarify errors returned for easier debugging
+
 ## [0.1.20] - 2018-08-30
 - Add Custom Shipping method management
 - Add Email Alteration webhook management

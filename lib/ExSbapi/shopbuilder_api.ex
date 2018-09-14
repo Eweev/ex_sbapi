@@ -114,10 +114,18 @@ defmodule ShopbuilderApi do
     logger =
       case status_code do
         401 ->
-          "ExSbapi: Unauthorized token"
+          if(String.trim(reason["error"]) == "") do
+            "ExSbapi: Unauthorized token"
+          else
+            "ExSbapi: #{inspect(reason)}"
+          end
 
         404 ->
-          "ExSbapi: No entities found"
+          if(String.trim(reason["error"]) == "") do
+            "ExSbapi: No entities found"
+          else
+            "ExSbapi: #{inspect(reason)}"
+          end
 
         _ ->
           "ExSbapi: #{inspect(reason)}"

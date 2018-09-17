@@ -62,7 +62,8 @@ defmodule ShopbuilderApi do
            client(website_url, access_token),
            url,
            body,
-           "Content-Type": "application/json"
+           ["Content-Type": "application/json"],
+           [{:recv_timeout, 10_000}]
          ) do
       {:ok, %OAuth2.Response{status_code: 200, body: response}} ->
         {:ok, format_output(format, response)}
@@ -82,7 +83,8 @@ defmodule ShopbuilderApi do
            client(website_url, access_token),
            url,
            body,
-           "Content-Type": "application/json"
+           ["Content-Type": "application/json"],
+           [{:recv_timeout, 10_000}]
          ) do
       {:ok, %OAuth2.Response{status_code: 200, body: response}} ->
         {:ok, format_output(format, response)}

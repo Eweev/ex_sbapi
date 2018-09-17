@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.22] - 2018-09-17
+- Extend timeout of put and post requests for slow requests
+
 ## [0.1.21] - 2018-09-14
 - Clarify errors returned for easier debugging
 

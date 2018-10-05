@@ -1,7 +1,7 @@
 defmodule ExSbapi.Mixfile do
   use Mix.Project
 
-  @version "0.1.22"
+  @version "0.1.23"
   @name "shopbuilder_api"
   @maintainers ["Julien Fayad"]
   @url "https://github.com/Eweev/ex_sbapi"

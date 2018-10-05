@@ -434,6 +434,56 @@ defmodule ExSbapi do
     end
   end
 
+  def get_profile_mobile_number(access_token, client \\ %{}) do
+    case Config.check_client_params(client) do
+      {:ok, finalized_client_map} ->
+        object_params = %{
+          object: "restricted",
+          body: "",
+          params: Helper.default_empty_params(),
+          format: ""
+        }
+
+        client_params = %{
+          website_url: finalized_client_map.website_url,
+          access_token: access_token
+        }
+
+        case get_request(client_params, object_params) do
+          {:ok,response} -> 
+            {:ok, response["success"]["profile_mobile_number"]}
+          {:error, logger} -> 
+            {:error, logger}
+        end
+
+      {:error, reason} ->
+        raise reason
+    end
+  end
+
+  def set_profile_mobile_number(required, show_on_registration_form, access_token, client \\ %{}) do
+    case Config.check_client_params(client) do
+      {:ok, finalized_client_map} ->
+        object_params = %{
+          object: "profile_mobile_number",
+          body: Helper.body_for_profile_mobile_number(required, show_on_registration_form),
+          params: Helper.default_empty_params(),
+          format: "json"
+        }
+
+        client_params = %{
+          website_url: finalized_client_map.website_url,
+          access_token: access_token
+        }
+
+        post_request(client_params, object_params)
+
+      {:error, reason} ->
+        raise reason
+    end
+  end
+
+
   def product_redirections(status, access_token, client \\ %{}) do
     case Config.check_client_params(client) do
       {:ok, finalized_client_map} ->

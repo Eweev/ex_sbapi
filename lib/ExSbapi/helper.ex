@@ -32,6 +32,13 @@ defmodule ExSbapi.Helper do
     }
   end
 
+  def body_for_profile_mobile_number(required, show_on_registration_form) do
+    %{
+      required: required,
+      show_on_registration_form: show_on_registration_form
+    }
+  end
+
   def product_redirection(status) do
     %{
       status: status

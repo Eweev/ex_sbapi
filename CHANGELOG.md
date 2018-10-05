@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.23] - 2018-10-04
+- Add GET Customer Profile Mobile Number Site Configuration
+- Add POST Customer Profile Mobile Number Site Configuration
+
 ## [0.1.22] - 2018-09-17
 - Extend timeout of put and post requests for slow requests
 

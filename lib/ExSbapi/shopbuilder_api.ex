@@ -6,6 +6,15 @@ defmodule ShopbuilderApi do
     api_root = "/api/v1/"
 
     %{
+      "product" => api_root <> "product",
+      "product_upsert" => api_root <> "product/upsert",
+      "product_bulk" => api_root <> "product/bulk",
+      "product_uuid" => api_root <> "product/uuid/!0",
+      "collection" => api_root <> "collection",
+      "collection_upsert" => api_root <> "collection/upsert",
+      "collection_uuid" => api_root <> "collection/uuid/!0",
+      "option" => api_root <> "option",
+      "option_uuid" => api_root <> "option/uuid/!0",
       "order" => api_root <> "order/uuid/!0",
       "customer_profile" => api_root <> "customer-profile",
       "customer_profile_uuid" => api_root <> "customer-profile/uuid/!0",
@@ -33,7 +42,7 @@ defmodule ShopbuilderApi do
       "unsubscribe_email" => api_root <> "sb_emails/unsubscribe_email",
       "custom_shipping" => api_root <> "custom_shipping",
       "delete_custom_shipping" => api_root <> "custom_shipping/!0",
-      "update_custom_shipping" => api_root <> "custom_shipping/!0",
+      "update_custom_shipping" => api_root <> "custom_shipping/!0"
     }
   end
 
@@ -85,7 +94,7 @@ defmodule ShopbuilderApi do
            url,
            body,
            ["Content-Type": "application/json"],
-           [{:recv_timeout, 10_000}]
+           [{:recv_timeout, 60_000}]
          ) do
       {:ok, %OAuth2.Response{status_code: 200, body: response}} ->
         {:ok, format_output(format, response)}
@@ -144,15 +153,37 @@ defmodule ShopbuilderApi do
   end
 
   defp parse_params(params) do
-    if params != %{} do
-      if params.filter != nil do
-        params.filter
-        |> Enum.reduce("?", fn {k, v}, acc -> acc <> "parameters[#{k}]=#{v}&" end)
-      else
-        ""
-      end
+    query_params =
+      []
+      |> parse_params_filter(params)
+      |> parse_params_fields(params)
+
+    if length(query_params) > 0 do
+      query = query_params |> Enum.join("&")
+      "?" <> query
     else
       ""
+    end
+  end
+
+  defp parse_params_filter(query_params, params) do
+    filter = params |> Map.get(:filter, %{})
+
+    if map_size(filter) > 0 do
+      filter
+      |> Enum.reduce(query_params, fn {k, v}, acc -> query_params ++ ["parameters[#{k}]=#{v}"] end)
+    else
+      query_params
+    end
+  end
+
+  defp parse_params_fields(query_params, params) do
+    fields = params |> Map.get(:fields, nil)
+
+    if fields != nil do
+      query_params ++ ["fields=#{fields}"]
+    else
+      query_params
     end
   end
 

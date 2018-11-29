@@ -1,6 +1,12 @@
 defmodule ExSbapi do
   alias ExSbapi.Helper
 
+  alias ExSbapi.{
+    Product,
+    ProductVariation,
+    Collection
+  }
+
   @moduledoc """
   Elixir Wrapper Around Shopbuilder API
   """
@@ -31,7 +37,7 @@ defmodule ExSbapi do
   end
 
   def authorize_url!(_, _, _) do
-    raise "Please check your third variable it should be %{client_id: _,client_secret: _,website_url: _,redirect_uri: _} For more information what each variable means please check the documation"
+    raise "Please check your third variable it should be %{client_id: _,client_secret: _,website_url: _,redirect_uri: _} For more information what each variable means please check the documentation"
   end
 
   def get_token!(provider, code, client = %{}) do
@@ -450,9 +456,10 @@ defmodule ExSbapi do
         }
 
         case get_request(client_params, object_params) do
-          {:ok,response} -> 
+          {:ok, response} ->
             {:ok, response["success"]["profile_mobile_number"]}
-          {:error, logger} -> 
+
+          {:error, logger} ->
             {:error, logger}
         end
 
@@ -482,7 +489,6 @@ defmodule ExSbapi do
         raise reason
     end
   end
-
 
   def product_redirections(status, access_token, client \\ %{}) do
     case Config.check_client_params(client) do
@@ -702,7 +708,7 @@ defmodule ExSbapi do
 
   ## Examples: 
       iex> set_app_settings(
-        "http://merhi.dev.shopbuilder.me", 
+        "http:\\merhi.dev.shopbuilder.me", 
         "01a1f82c447c1ffc19f54a8174ae1b8e648cc864",
         %{hash_key: "5tQ4jHbQAqdfjI3cNEqoLAIChw6ZK2BI9tJR9omkzNCAFZS7odwcx+yC5xxTgt47wUg0iaoKuoRyClhU/3+okQ=="}
       )
@@ -822,4 +828,394 @@ defmodule ExSbapi do
     ExSbapi.delete_request(client_params, object_params)
   end
 
+  @doc """
+
+  Builds a new `ExSbapi.ProductVariation` struct using the provided arguments.
+
+  ## Arguments
+
+  * `sku` - a unique string for the product variation.
+  * `stock` - an interger, quantity of the variation
+  * `price` - a `ExSbapi.Price` struct
+  * `dimensions` - a `ExSbapi.ProductDimensions` struct
+  * `weight` - a `ExSbapi.ProductWeight` struct
+  * `status` - "0" or "1"
+  * `images` - a list of images
+  * `options` - options
+  * `old_price` - a `ExSbapi.Price` struct
+
+  """
+  @spec build_product_variation(
+          binary,
+          integer,
+          Price.t(),
+          ProductDimensions.t(),
+          ProductWeight.t(),
+          binary,
+          list,
+          map,
+          Price.t()
+        ) :: ProductVariation.t()
+  def build_product_variation(
+        sku,
+        stock,
+        price,
+        dimensions \\ nil,
+        weight \\ nil,
+        status \\ "1",
+        images \\ nil,
+        options \\ nil,
+        old_price \\ nil
+      ) do
+    ProductVariation.new(
+      sku,
+      stock,
+      price,
+      dimensions,
+      weight,
+      status,
+      images,
+      options,
+      old_price
+    )
+  end
+
+  @doc """
+
+  Builds a new `ExSbapi.Product` struct using the provided arguments.
+
+  ## Arguments
+
+  * `title` - title of the product.
+  * `variations` - a list of `ExSbapi.ProductVariation` structs
+  * `collections` - a list of `ExSbapi.ProductType` structs
+  * `description` -  description of the product.
+  * `status` - "0" or "1"
+  * `images` - a list of images
+  * `ref` - a reference string
+  * `language` - language code ex. "en"
+  * `new` - boolean, to indicate if product is new 
+  * `on_sale` - boolean, to indicate if product is on sale 
+  * `same_price` - boolean, to indicate if all product variations has the same price 
+  * `price` - a `ExSbapi.Price` struct (will apply to all variations)
+  * `same_weight_dimensions` - boolean, to indicate if all product variations has the same dimensions and weight
+  * `weight` - a `ExSbapi.ProductWeight` struct (will apply to all variations)
+  * `dimensions` - a `ExSbapi.ProductDimensions` struct (will apply to all variations)
+  * `suggested_products` - a list of suggested products
+  * `seo` - a tupple containing seo fields
+  * `type` - ex. "shop_builder_display"
+
+  """
+  @spec build_product(
+          binary,
+          list,
+          list,
+          any,
+          binary,
+          list,
+          binary,
+          binary,
+          boolean,
+          boolean,
+          boolean,
+          Price.t(),
+          boolean,
+          ProductWeight.t(),
+          ProductDimensions.t(),
+          list,
+          map,
+          binary
+        ) :: Product.t()
+
+  def build_product(
+        title,
+        variations,
+        collections,
+        description \\ "",
+        status \\ "1",
+        images \\ [],
+        ref \\ "",
+        language \\ "en",
+        new \\ true,
+        on_sale \\ false,
+        same_price \\ false,
+        price \\ nil,
+        same_weight_dimensions \\ false,
+        weight \\ nil,
+        dimensions \\ nil,
+        suggested_products \\ nil,
+        seo \\ nil,
+        type \\ "shop_builder_display"
+      ) do
+    Product.new(
+      title,
+      variations,
+      collections,
+      description,
+      status,
+      images,
+      ref,
+      language,
+      new,
+      on_sale,
+      same_price,
+      price,
+      same_weight_dimensions,
+      weight,
+      dimensions,
+      suggested_products,
+      seo,
+      type
+    )
+  end
+
+  @doc """
+
+  Builds a new `ExSbapi.Collection` struct using the provided arguments.
+
+  ## Arguments
+
+  * `title` - a unique string for the product variation.
+  * `description` - an interger, quantity of the variation
+  * `image` - a `ExSbapi.Price` struct
+  * `ref` - a `ExSbapi.ProductDimensions` struct
+
+  """
+  @spec build_collection(binary, any, map, binary) :: Collection.t()
+
+  def build_collection(title, description \\ "", image \\ nil, ref \\ "") do
+    Collection.new(title, description, image, ref)
+  end
+
+  @doc """
+
+  Creates a product collection to the given `website_url` using the provided arguments.
+
+  ## Arguments
+
+  * `title` - a unique string for the product variation.
+  * `description` - an interger, quantity of the variation
+  * `image` - a `ExSbapi.Price` struct
+  * `ref` - a `ExSbapi.ProductDimensions` struct
+
+  Makes a `POST` request to the given `website_url` using the `OAuth2.AccessToken`.
+
+  """
+
+  @spec add_collection(binary, binary, any, binary, any, map, binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def add_collection(
+        website_url,
+        access_token,
+        title,
+        description \\ "",
+        image \\ nil,
+        ref \\ "",
+        format \\ "json"
+      ) do
+    collection_object = build_collection(title, description, image, ref)
+
+    object_params = %{
+      object: "collection",
+      body: collection_object,
+      params: Helper.default_empty_params(),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    post_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Creates a product to the given `website_url` with a provided `product_object`.
+
+  Makes a `POST` request to the given `website_url` using the `OAuth2.AccessToken`.
+
+  """
+  @spec add_product(binary, binary, Product.t(), binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def add_product(website_url, access_token, product_object, format \\ "json") do
+    object_params = %{
+      object: "product",
+      body: product_object,
+      params: Helper.default_empty_params(),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    post_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Creates a product to the given `website_url` with the provided arguments.
+
+  ## Arguments
+
+  * `title` - title of the product.
+  * `variations` - a list of `ExSbapi.ProductVariation` structs
+  * `collections` - a list of `ExSbapi.ProductType` structs
+  * `description` -  description of the product.
+  * `status` - "0" or "1"
+  * `images` - a list of images
+  * `ref` - a reference string
+  * `language` - language code ex. "en"
+  * `new` - boolean, to indicate if product is new 
+  * `on_sale` - boolean, to indicate if product is on sale 
+  * `same_price` - boolean, to indicate if all product variations has the same price 
+  * `price` - a `ExSbapi.Price` struct (will apply to all variations)
+  * `same_weight_dimensions` - boolean, to indicate if all product variations has the same dimensions and weight
+  * `weight` - a `ExSbapi.ProductWeight` struct (will apply to all variations)
+  * `dimensions` - a `ExSbapi.ProductDimensions` struct (will apply to all variations)
+  * `suggested_products` - a list of suggested products
+  * `seo` - a tupple containing seo fields
+  * `type` - ex. "shop_builder_display"
+
+  Makes a `POST` request to the given `website_url` using the `OAuth2.AccessToken`.
+
+  """
+  @spec add_product(binary, binary, any, binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def add_product(
+        website_url,
+        access_token,
+        title,
+        variations,
+        collections,
+        description \\ "",
+        status \\ "1",
+        images \\ [],
+        ref \\ "",
+        language \\ "en",
+        new \\ true,
+        on_sale \\ false,
+        same_price \\ false,
+        price \\ nil,
+        same_weight_dimensions \\ false,
+        weight \\ nil,
+        dimensions \\ nil,
+        suggested_products \\ nil,
+        seo \\ nil,
+        type \\ "shop_builder_display",
+        format \\ "json"
+      ) do
+    product_object =
+      build_product(
+        title,
+        variations,
+        collections,
+        description,
+        status,
+        images,
+        ref,
+        language,
+        new,
+        on_sale,
+        same_price,
+        price,
+        same_weight_dimensions,
+        weight,
+        dimensions,
+        suggested_products,
+        seo,
+        type
+      )
+
+    object_params = %{
+      object: "product",
+      body: product_object,
+      params: Helper.default_empty_params(),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    post_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Fetchs all products from the given `website_url`.
+
+  Makes a `GET` request to the given `website_url` using the `OAuth2.AccessToken`
+
+  """
+  @spec get_products(binary, binary, any, binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def get_products(website_url, access_token, fields \\ nil, filter \\ %{}, format \\ "json") do
+    object_params = %{
+      object: "product",
+      body: "",
+      params: Helper.params(filter, fields),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    get_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Fetchs all product collections from the given `website_url`.
+
+  Makes a `GET` request to the given `website_url` using the `OAuth2.AccessToken`
+
+  """
+  @spec get_collections(binary, binary, any, binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def get_collections(website_url, access_token, fields \\ nil, filter \\ %{}, format \\ "json") do
+    object_params = %{
+      object: "collection",
+      body: "",
+      params: Helper.params(filter, fields),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    get_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Fetchs all product options from the given `website_url`.
+
+  Makes a `GET` request to the given `website_url` using the `OAuth2.AccessToken`
+
+  """
+  @spec get_options(binary, binary, any, binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def get_options(website_url, access_token, fields \\ nil, filter \\ %{}, format \\ "json") do
+    object_params = %{
+      object: "option",
+      body: "",
+      params: Helper.params(filter, fields),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    get_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Initiates a product bulk operation that can reate, update or delete a set of products (up to 20 products)
+  in a single requestto the given `website_url`.
+
+  Makes a `POST` request to the given `website_url` using the `OAuth2.AccessToken`.
+
+  """
+
+  @spec product_bulk_operation(binary, binary, any, binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def product_bulk_operation(website_url, access_token, body, format \\ "json") do
+    object_params = %{
+      object: "product_bulk",
+      body: body,
+      params: Helper.default_empty_params(),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    post_request(client_params, object_params)
+  end
 end

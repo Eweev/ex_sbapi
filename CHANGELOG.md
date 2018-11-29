@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.24] - 2018-11-20
+- Define Modules for Shopbuilder Products and Product Components 
+- Define Modules for Product Components: Variations, Price, Dimensions, Weight & Type
+- Define Modules for Bulk Operations
+- Support the query parameter "fields" in all requests. 
+- Add POST Product
+- Add GET Products
+- Add GET Collections
+- Add GET Options
+- Add Post Product Bulk
+
 ## [0.1.23] - 2018-10-04
 - Add GET Customer Profile Mobile Number Site Configuration
 - Add POST Customer Profile Mobile Number Site Configuration

@@ -24,6 +24,14 @@ defmodule ExSbapi.Helper do
     }
   end
 
+  def params(filter \\ %{}, fields \\ nil, uri_token \\ []) do
+    %{
+      filter: filter,
+      uri_token: uri_token,
+      fields: fields
+    }
+  end
+
   def body_for_mode(restricted, mode, authorized_roles) do
     %{
       restricted: restricted,

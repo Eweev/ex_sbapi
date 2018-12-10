@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.25] - 2018-12-10
+- Add GET Option
+- Add POST Option
+- Add PUT Option
+- Add DELETE Option
+
 ## [0.1.24] - 2018-11-20
 - Define Modules for Shopbuilder Products and Product Components 
 - Define Modules for Product Components: Variations, Price, Dimensions, Weight & Type

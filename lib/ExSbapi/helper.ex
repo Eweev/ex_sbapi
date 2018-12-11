@@ -24,6 +24,14 @@ defmodule ExSbapi.Helper do
     }
   end
 
+  def params_with_option_id(option_id, filter \\ %{}, fields \\ nil) do
+    %{
+      uri_token: [option_id],
+      filter: filter,
+      fields: fields
+    }
+  end
+
   def params(filter \\ %{}, fields \\ nil, uri_token \\ []) do
     %{
       filter: filter,

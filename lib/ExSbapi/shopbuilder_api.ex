@@ -14,7 +14,7 @@ defmodule ShopbuilderApi do
       "collection_upsert" => api_root <> "collection/upsert",
       "collection_uuid" => api_root <> "collection/uuid/!0",
       "option" => api_root <> "option",
-      "option_uuid" => api_root <> "option/uuid/!0",
+      "option_id" => api_root <> "option/!0",
       "order" => api_root <> "order/uuid/!0",
       "customer_profile" => api_root <> "customer-profile",
       "customer_profile_uuid" => api_root <> "customer-profile/uuid/!0",
@@ -190,10 +190,10 @@ defmodule ShopbuilderApi do
   defp modify_url(url, params) do
     # replace tokens in commands with parameters
     %{count: _, data: currated_command} =
-      Enum.reduce(params, %{count: 0, data: url}, fn x, acc ->
+      Enum.reduce(params, %{count: 0, data: url}, fn x, %{data: data, count: count} = acc ->
         # We return a map with the new count (to properly update the pattern) and the new data
         # the data is being replaced incrementally, each time with the new param
-        %{count: acc[:count] + 1, data: String.replace(acc[:data], "!#{acc[:count]}", x)}
+        %{count: count + 1, data: String.replace(data, "!#{count}", "#{x}")}
       end)
 
     currated_command

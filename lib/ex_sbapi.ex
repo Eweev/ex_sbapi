@@ -4,7 +4,8 @@ defmodule ExSbapi do
   alias ExSbapi.{
     Product,
     ProductVariation,
-    Collection
+    Collection,
+    ProductOption
   }
 
   @moduledoc """
@@ -835,7 +836,7 @@ defmodule ExSbapi do
   ## Arguments
 
   * `sku` - a unique string for the product variation.
-  * `stock` - an interger, quantity of the variation
+  * `stock` - an integer, quantity of the variation
   * `price` - a `ExSbapi.Price` struct
   * `dimensions` - a `ExSbapi.ProductDimensions` struct
   * `weight` - a `ExSbapi.ProductWeight` struct
@@ -976,9 +977,9 @@ defmodule ExSbapi do
   ## Arguments
 
   * `title` - a unique string for the product variation.
-  * `description` - an interger, quantity of the variation
-  * `image` - a `ExSbapi.Price` struct
-  * `ref` - a `ExSbapi.ProductDimensions` struct
+  * `description` - description for the variarion
+  * `image` - an `Image` struct
+  * `ref` - a reference string
 
   """
   @spec build_collection(binary, any, map, binary) :: Collection.t()
@@ -994,9 +995,9 @@ defmodule ExSbapi do
   ## Arguments
 
   * `title` - a unique string for the product variation.
-  * `description` - an interger, quantity of the variation
-  * `image` - a `ExSbapi.Price` struct
-  * `ref` - a `ExSbapi.ProductDimensions` struct
+  * `description` - description for the variarion
+  * `image` - an `Image` struct
+  * `ref` - a reference string
 
   Makes a `POST` request to the given `website_url` using the `OAuth2.AccessToken`.
 
@@ -1131,6 +1132,169 @@ defmodule ExSbapi do
 
     client_params = %{website_url: website_url, access_token: access_token}
     post_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Gets the option with the given `option_id` from the given `website_url`.
+
+  Makes a `GET` request to the given `website_url` using the `OAuth2.AccessToken`
+
+  """
+  @spec get_option(integer, binary, binary, binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def get_option(option_id, website_url, access_token, format \\ "json") do
+    object_params = %{
+      object: "option_id",
+      body: "",
+      params: Helper.params_with_option_id(option_id),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    get_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Creates a product option to the given `website_url` with the provided arguments.
+
+  ## Arguments
+
+  * `name` - name of the option.
+  * `bundle_type` - "shop_builder" or "digital_goods", bundle type to which this option is available.
+  * `is_attribute` - boolean, to indicate if this option is an attribute.
+  * `is_searchable` -  boolean, to indicate if this option should be added as a filter in the shop page.
+  * `is_default_visible` - boolean, to indicate if this option should show when adding products.
+  * `show_as_button` - boolean, to indicate if this option should show as a button in the product page.
+
+  Makes a `POST` request to the given `website_url` using the `OAuth2.AccessToken`.
+
+  """
+  @spec add_option(
+          binary,
+          binary,
+          any,
+          boolean,
+          boolean,
+          boolean,
+          boolean,
+          binary,
+          binary
+        ) :: {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def add_option(
+        website_url,
+        access_token,
+        name,
+        is_attribute \\ false,
+        is_searchable \\ false,
+        is_default_visible \\ false,
+        show_as_button \\ false,
+        bundle_type \\ "shop_builder",
+        format \\ "json"
+      ) do
+    option_object =
+      ProductOption.new(
+        name: name,
+        bundle_type: bundle_type,
+        is_attribute: is_attribute,
+        is_searchable: is_searchable,
+        is_default_visible: is_default_visible,
+        show_as_button: show_as_button
+      )
+
+    object_params = %{
+      object: "option",
+      body: option_object,
+      params: Helper.default_empty_params(),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    post_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Updates a product option with the given `option_id` to the given `website_url` with the provided arguments.
+
+  ## Arguments
+
+  * `option_id` - id of the option.
+  * `name` - name of the option.
+  * `bundle_type` - bundle type to which this option is available.
+  * `is_attribute` - boolean, to indicate if this option is an attribute.
+  * `is_searchable` -  boolean, to indicate if this option should be added as a filter in the shop page.
+  * `is_default_visible` - boolean, to indicate if this option should show when adding products.
+  * `show_as_button` - boolean, to indicate if this option should show as a button in the product page.
+
+  Makes a `PUT` request to the given `website_url` using the `OAuth2.AccessToken`.
+
+  """
+  @spec update_option(
+          integer,
+          binary,
+          binary,
+          any,
+          boolean,
+          boolean,
+          boolean,
+          boolean,
+          binary,
+          binary
+        ) :: {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def update_option(
+        option_id,
+        website_url,
+        access_token,
+        name,
+        is_attribute \\ false,
+        is_searchable \\ false,
+        is_default_visible \\ false,
+        show_as_button \\ false,
+        bundle_type \\ "shop_builder",
+        format \\ "json"
+      ) do
+    option_object =
+      ProductOption.new(
+        name: name,
+        bundle_type: bundle_type,
+        is_attribute: is_attribute,
+        is_searchable: is_searchable,
+        is_default_visible: is_default_visible,
+        show_as_button: show_as_button
+      )
+
+    object_params = %{
+      object: "option_id",
+      body: option_object,
+      params: Helper.params_with_option_id(option_id),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    put_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Deletes the option with the given `option_id` from the given `website_url`.
+
+  Makes a `DELETE` request to the given `website_url` using the `OAuth2.AccessToken`
+
+  """
+  @spec delete_option(integer, binary, binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def delete_option(option_id, website_url, access_token) do
+    object_params = %{
+      object: "option_id",
+      body: "",
+      params: Helper.params_with_option_id(option_id),
+      format: "json"
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    delete_request(client_params, object_params)
   end
 
   @doc """

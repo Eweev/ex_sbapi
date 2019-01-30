@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.26] - 2019-01-29
+- Add POST Image
+- Add PUT Image
+
 ## [0.1.25] - 2018-12-10
 - Add GET Option
 - Add POST Option

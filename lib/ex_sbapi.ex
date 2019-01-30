@@ -1362,8 +1362,8 @@ defmodule ExSbapi do
 
   @doc """
 
-  Initiates a product bulk operation that can reate, update or delete a set of products (up to 20 products)
-  in a single requestto the given `website_url`.
+  Initiates a product bulk operation that can create, update or delete a set of products (up to 20 products)
+  in a single request to the given `website_url`.
 
   Makes a `POST` request to the given `website_url` using the `OAuth2.AccessToken`.
 
@@ -1381,5 +1381,72 @@ defmodule ExSbapi do
 
     client_params = %{website_url: website_url, access_token: access_token}
     post_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Creates a image to the given `website_url`.
+
+  ## Arguments
+
+  * `imagename` - name of the image.
+  * `imagedata` - image in base64.
+  * `status` - "0" (unpublished) or "1" (published).
+
+  Makes a `POST` request to the given `website_url` using the `OAuth2.AccessToken`.
+
+  """
+  @spec create_image(binary, binary, binary, binary, any, binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def create_image(
+        website_url,
+        access_token,
+        imagename,
+        imagedata,
+        status \\ "1",
+        format \\ "json"
+      ) do
+    object_params = %{
+      object: "image",
+      body: %{"filename" => imagename, "file" => imagedata, "status" => status},
+      params: Helper.default_empty_params(),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    post_request(client_params, object_params)
+  end
+
+  @doc """
+
+  Updates a image to the given `website_url`.
+
+  ## Arguments
+  * `fid` - image id. 
+  * `filedata` - image in base64.
+  * `status` - "0" (unpublished) or "1" (published).
+
+  Makes a `PUT` request to the given `website_url` using the `OAuth2.AccessToken`.
+
+  """
+  @spec update_image(binary, binary, integer, binary, binary, binary) ::
+          {:ok, Response.t()} | {:error, Response.t()} | {:error, Error.t()}
+  def update_image(
+        website_url,
+        access_token,
+        fid,
+        imagedata,
+        status \\ "1",
+        format \\ "json"
+      ) do
+    object_params = %{
+      object: "image_fid",
+      body: %{"file" => imagedata, "status" => status},
+      params: Helper.params(%{}, nil, [fid]),
+      format: format
+    }
+
+    client_params = %{website_url: website_url, access_token: access_token}
+    put_request(client_params, object_params)
   end
 end

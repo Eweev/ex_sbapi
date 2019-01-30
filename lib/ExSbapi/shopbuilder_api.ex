@@ -42,6 +42,8 @@ defmodule ShopbuilderApi do
       "unsubscribe_email" => api_root <> "sb_emails/unsubscribe_email",
       "custom_shipping" => api_root <> "custom_shipping",
       "delete_custom_shipping" => api_root <> "custom_shipping/!0",
+      "image" => api_root <> "sb-image",
+      "image_fid" => api_root <> "sb-image/!0",
       "update_custom_shipping" => api_root <> "custom_shipping/!0"
     }
   end
